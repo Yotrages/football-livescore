@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Create an axios instance
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://football-backend-yx62.onrender.com",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://football-backend-yx62.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
