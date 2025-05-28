@@ -35,7 +35,7 @@ const useLiveData = <T>(
     | "getSingleTeamMatches"
     | "getTeamInfo" 
     | "getSinglePlayer",
-  refreshInterval: number = 60000, // Default 1 minute
+  refreshInterval: number = 60000, 
   params?: any
 ): {
   data: T;

@@ -1,16 +1,14 @@
-// src/services/apiService.ts
 import { League, LeagueStanding, Match, MatchDetail, SingleCompetitionScorers, SinglePlayer, SingleTeam, SingleTeamMatches } from "@/types";
 import axios from "axios";
 
 // Create an axios instance
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://football-backend-yx62.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Football API service
 const footballService = {
   // Get today matches
   getTodayMatches: async (): Promise<Match[]> => {
