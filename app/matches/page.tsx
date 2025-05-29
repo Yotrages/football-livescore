@@ -86,7 +86,7 @@ const Page = () => {
               Something went wrong
             </h1>
             <p className="text-gray-600 mb-6 text-center max-w-md">
-              We couldn't load today's matches. Please check your connection and try again.
+              We couldn&apos;t load today&apos;s matches. Please check your connection and try again.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -117,7 +117,7 @@ const Page = () => {
                 <FaFutbol className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Today's Matches</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Today&apos;s Matches</h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <FaCalendarAlt className="w-3 h-3" />
                   <span>{new Date().toLocaleDateString('en-US', { 

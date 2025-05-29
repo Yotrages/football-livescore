@@ -38,7 +38,7 @@ const Page = () => {
                   No news
                 </h1>
                 <p className="text-gray-600 mb-6 text-center max-w-md">
-                  We couldn't load news, still looking for writer
+                  We couldn&apos;t load news, still looking for writer
                 </p>
                 <button
                   onClick={() => window.location.reload()}

@@ -90,7 +90,7 @@ const Page = () => {
               Unable to load leagues
             </h1>
             <p className="text-gray-600 mb-6 text-center max-w-md">
-              We couldn't fetch the leagues at the moment. Please check your connection and try again.
+              We couldn&apos;t fetch the leagues at the moment. Please check your connection and try again.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -197,7 +197,7 @@ const Page = () => {
               <div className="mt-4 flex items-center justify-between">
                 <p className="text-sm text-gray-600">
                   Showing {filteredLeagues.length} of {sortedLeagues.length} leagues
-                  {searchTerm && <span> for "{searchTerm}"</span>}
+                  {searchTerm && <span> for &apos;{searchTerm}&apos;</span>}
                   {selectedCountry !== 'all' && <span> in {selectedCountry}</span>}
                 </p>
                 {(searchTerm || selectedCountry !== 'all') && (
@@ -242,7 +242,7 @@ const Page = () => {
               No leagues found
             </h3>
             <p className="text-gray-500 mb-6 text-center max-w-md">
-              We couldn't find any leagues matching your search criteria. Try adjusting your filters.
+              We couldn&apos;t find any leagues matching your search criteria. Try adjusting your filters.
             </p>
             <button
               onClick={() => {
