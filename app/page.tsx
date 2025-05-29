@@ -7,7 +7,7 @@ import LeagueCard from "@/components/leagues/LeagueCard"
 
 const Page = () => {
   const { data: matches } = useTodayMatches(30000);
-  const {data: upcomingMatches} = useUpcomingMatches(300000)
+  const {data: upcomingMatches} = useUpcomingMatches(30000)
   const {data: featuredLeagues} = useLeagues(3000000)
   const {data: liveMatches} = useLiveMatches(30000)
   const [currentTab, setCurrentTab] = useState<'Today' | 'live' | 'upcoming'>('Today');
