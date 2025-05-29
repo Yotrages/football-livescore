@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import "./globals.css"
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata = {
      title: "Football Livescore",
@@ -15,6 +16,7 @@ const Rootlayout = ({children} : {children: React.ReactNode}) => {
         
     </head>
     <body>
+        <Analytics />
             <Toaster />
             <Header />
             {children}
