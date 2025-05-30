@@ -17,7 +17,7 @@ const SingleTeamPage = () => {
 
   const [activeTab, setActiveTab] = useState<'overview' | 'squad' | 'matches' | 'stats'>('overview');
 
-  if (teamLoading) {
+  if (teamLoading || matchesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
@@ -28,7 +28,7 @@ const SingleTeamPage = () => {
     );
   }
 
-  if (teamError || !teamData) {
+  if (teamError || !teamData || !matchesData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
@@ -127,7 +127,7 @@ const SingleTeamPage = () => {
       {/* Navigation Tabs */}
       <div className="bg-white/60 backdrop-blur-sm border-b border-white/20">
         <div className="container mx-auto px-6">
-          <nav className="flex space-x-8">
+          <nav className="flex flex-wrap qy:space-x-8 space-x-4">
             {[
               { id: 'overview', label: 'Overview', icon: FaShieldAlt },
               { id: 'squad', label: 'Squad', icon: FaUsers },
@@ -204,13 +204,15 @@ const SingleTeamPage = () => {
                 <div className="space-y-3">
                   {teamData.runningCompetitions && teamData.runningCompetitions?.map((competition) => (
                     <div key={competition.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-8 h-8 relative">
+                      {competition.emblem && (
+                        <div className="w-8 h-8 relative">
                         <img
                           src={competition.emblem}
                           alt={competition.name}
                           className="object-contain"
                         />
                       </div>
+                      )}
                       <div>
                         <p className="font-medium text-gray-800">{competition.name}</p>
                         <p className="text-sm text-gray-500">{competition.type}</p>

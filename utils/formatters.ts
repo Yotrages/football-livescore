@@ -56,7 +56,7 @@ export const getStatusClass = (status: string): string => {
     case 'PAUSED':
       return 'bg-yellow-500 text-white';
     case 'FINISHED':
-      return 'bg-green-600 text-white';
+      return 'green text-white';
     case 'POSTPONED':
     case 'SUSPENDED':
     case 'CANCELED':

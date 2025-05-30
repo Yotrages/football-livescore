@@ -128,9 +128,9 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto xs:px-4 px-2 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-wrap items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => router.back()}
@@ -143,7 +143,7 @@ const Page = () => {
                 <FaTrophy className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Football Leagues</h1>
+                <h1 className="xs:text-2xl text-lg font-bold text-gray-800">Football Leagues</h1>
                 <p className="text-sm text-gray-600">Discover competitions from around the world</p>
               </div>
             </div>
@@ -172,7 +172,7 @@ const Page = () => {
                   placeholder="Search leagues or countries..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="w-full pl-10 pr-4 py-3 border outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
               
@@ -182,11 +182,11 @@ const Page = () => {
                 <select
                   value={selectedCountry}
                   onChange={(e) => setSelectedCountry(e.target.value)}
-                  className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white min-w-48"
+                  className="xs:pl-10 max-w-full pl-8 outline-none xs:pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                 >
                   <option value="all">All Countries</option>
                   {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
+                    <option  key={country} value={country}>{country}</option>
                   ))}
                 </select>
               </div>
@@ -255,7 +255,6 @@ const Page = () => {
             </button>
           </div>
         ) : (
-          // No leagues at all
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-24 h-24 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full flex items-center justify-center mb-6">
               <FaTrophy className="w-12 h-12 text-yellow-500" />

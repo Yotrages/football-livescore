@@ -58,7 +58,7 @@ export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = 
     <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 text-white p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-wrap items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <img src={data.competition.emblem} alt={data.competition.name} className="w-16 h-16" />
             <div>
@@ -146,17 +146,17 @@ export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = 
             <div key={scorer.player.id} className={`bg-white border-2 rounded-xl p-4 hover:shadow-lg transition-all duration-300 ${
               index < 3 ? 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-white' : 'border-gray-200 hover:border-blue-300'
             }`}>
-              <Link href={`/players/${scorer.player.id}`} className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+              <Link href={`/players/${scorer.player.id}`} className="flex qy:flex-row flex-wrap flex-col items-center justify-between">
+                <div className="flex flex-wrap items-center space-x-4 space-y-2">
                   <div className="flex-shrink-0">
                     {getRankIcon(index)}
                   </div>
                   
                   <img src={scorer.team.crest} alt={scorer.team.name} className="w-12 h-12" />
                   
-                  <div className="min-w-0 flex-1">
+                  <div className="flex flex-col flex-1">
                     <h3 className="text-lg font-bold text-gray-900 truncate">{scorer.player.name}</h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex flex-wrap items-center space-x-4 text-sm text-gray-600">
                       <span className="font-medium">{scorer.team.shortName}</span>
                       <div className="flex items-center space-x-1">
                         <FaFlag className="w-3 h-3" />
@@ -170,7 +170,7 @@ export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = 
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2 flex-wrap justify-end">
+                <div className="flex items-center space-x-2 space-y-2 flex-wrap qy:justify-end">
                   <StatBadge
                     icon={<FaFootballBall className="w-4 h-4" />}
                     value={scorer.goals}

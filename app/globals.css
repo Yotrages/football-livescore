@@ -88,6 +88,10 @@ input[type="checkbox"].custom-checkbox:checked {
   background-repeat: no-repeat;
 }
 
+.green {
+  background-color: green;
+}
+
 .mantine-Tabs-tab .count {
   @apply bg-neutral-50 border text-heading-secondary border-neutral-200;
 }
