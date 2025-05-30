@@ -40,12 +40,12 @@ const useLiveData = <T>(
 ): {
   data: T;
   isLoading: boolean;
-  error: Error | null;
+  error: Error | null | string;
   refresh: () => Promise<void>;
 } => {
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | null | string>(null);
 
   // Function to fetch data based on dataType
   const fetchData = async () => {
@@ -134,7 +134,13 @@ const useLiveData = <T>(
       setData(result);
       setError(null);
     } catch (err: any) {
-      setError(err);
+      if (err.response) {
+        setError(err.response.data.error || err.response.data.message)
+      } else if (err.request) {
+        setError(err.message)
+      } else (
+        setError("something went wrong, check your connection")
+      )
       console.error(`Error fetching ${dataType}:`, err);
     } finally {
       setIsLoading(false);

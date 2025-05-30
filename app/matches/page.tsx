@@ -117,7 +117,7 @@ const Page = () => {
                 <FaFutbol className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Today&apos;s Matches</h1>
+                <h1 className="xs:text-2xl text-xl font-bold text-gray-800">Today&apos;s Matches</h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <FaCalendarAlt className="w-3 h-3" />
                   <span>{new Date().toLocaleDateString('en-US', { 

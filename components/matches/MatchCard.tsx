@@ -89,7 +89,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
           </div>
 
           {/* Away team */}
-          <Link href={`/teams/${match.homeTeam.id}`} className="flex items-center w-2/5 justify-end">
+          <Link href={`/teams/${match.awayTeam.id}`} className="flex items-center w-2/5 justify-end">
             <span className="font-medium text-left w-full truncate">
               {formatTeamName(match.awayTeam)}
             </span>

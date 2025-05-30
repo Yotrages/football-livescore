@@ -187,7 +187,7 @@ const SinglePlayerPage: React.FC = () => {
                   <span className="font-medium">{selectedPlayer.currentTeam.clubColors}</span>
                 </div>
                 {selectedPlayer.currentTeam.contract.start && selectedPlayer.currentTeam.contract.until !== null && (
-                  <div className="flex justify-between items-center py-2">
+                  <div className="flex gap-3 justify-between items-center py-2">
                   <span className="text-gray-600">Contract</span>
                   <span className="font-medium">{formatDate(selectedPlayer.currentTeam.contract.start)} - {formatDate(selectedPlayer.currentTeam.contract.until)}</span>
                 </div>

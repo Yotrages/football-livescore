@@ -6,10 +6,10 @@ import LeagueCard from "@/components/leagues/LeagueCard"
 // import NewsCard from "@/components/news/NewsCard";
 
 const Page = () => {
-  const { data: matches } = useTodayMatches(30000);
-  const {data: upcomingMatches} = useUpcomingMatches(30000)
+  const { data: matches } = useTodayMatches(30000000);
+  const {data: upcomingMatches} = useUpcomingMatches(30000000)
   const {data: featuredLeagues} = useLeagues(3000000)
-  const {data: liveMatches} = useLiveMatches(30000)
+  const {data: liveMatches} = useLiveMatches(300000000)
   const [currentTab, setCurrentTab] = useState<'Today' | 'live' | 'upcoming'>('Today');
 
   return (
@@ -32,7 +32,7 @@ const Page = () => {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-48 translate-y-48"></div>
       </div>
 
-      <main className="container mx-auto px-6 py-12 space-y-16">
+      <main className="container mx-auto qy:px-6 px-2 py-12 space-y-16">
         {/* Top Leagues Section */}
         <section>
           <div className="flex items-center justify-between mb-8">
@@ -64,7 +64,7 @@ const Page = () => {
             </div>
             
             {/* Enhanced Tab Navigation */}
-            <div className="flex space-x-1 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-1.5 border border-white/20">
+            <div className="flex flex-wrap space-x-1 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-1.5 border border-white/20">
               <button
                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
                   currentTab === 'Today'
@@ -123,8 +123,8 @@ const Page = () => {
           </div>
 
           {/* Matches Content */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-            <div className="p-8">
+          <div className="bg-white/80 backdrop-blur-sm w-full rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+            <div className="qy:p-8 p-0 w-full">
               {currentTab === 'live' ? (
                 liveMatches?.length > 0 ? (
                   <>
