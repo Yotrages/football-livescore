@@ -221,7 +221,7 @@ const Page: React.FC = () => {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
       <div className="relative">
         {formData.imageUrl && (
-          <Image 
+          <img 
             src={formData.imageUrl} 
             alt={formData.title}
             className="w-full h-48 object-cover"
