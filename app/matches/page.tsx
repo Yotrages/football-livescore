@@ -10,10 +10,9 @@ const Page = () => {
     data: matches,
     error: matchesError,
     isLoading: matchesLoading,
-  } = useTodayMatches(30000);
+  } = useTodayMatches(300000000);
   const router = useRouter();
 
-  // Loading state
   if (matchesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -104,8 +103,8 @@ const Page = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center justify-between mb-8">
+          <div className="flex flex-wrap items-center gap-4">
             <button
               onClick={() => router.back()}
               className="flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-gray-600 hover:text-gray-800"

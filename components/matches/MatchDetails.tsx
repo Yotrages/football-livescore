@@ -1,11 +1,13 @@
+"use client"
 import { useState } from 'react';
 import { MatchDetail } from '@/types';
 import { FaCalendar, FaClock, FaMapPin } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'officials'>('overview');
-
+  const router = useRouter()
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -47,9 +49,9 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
   return (
     <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-4">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white xs:p-6 py-6 px-2">
+        <div className="flex flex-wrap items-center justify-between mb-4">
+          <div onClick={() => router.push(`/leagues/${match.competition.id}`)} className="flex flex-wrap items-center gap-4">
             <img src={match.competition.emblem} alt={match.competition.name} className="w-12 h-12" />
             <div>
               <h1 className="text-2xl font-bold">{match.competition.name}</h1>
@@ -72,14 +74,14 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
 
         {/* Score Display */}
         <div className="flex items-center justify-center space-x-8 py-6">
-          <Link href={`/teams/${match.homeTeam.id}`} className="text-center">
+          <Link href={`/teams/${match.homeTeam.id}`} className="text-center flex-1 truncate">
             <img src={match.homeTeam.crest} alt={match.homeTeam.name} className="w-16 h-16 mx-auto mb-2" />
             <h2 className="text-xl font-bold">{match.homeTeam.name}</h2>
             <p className="text-blue-100 text-sm">{match.homeTeam.shortName}</p>
           </Link>
           
-          <div className="text-center">
-            <div className="text-5xl font-bold mb-2">
+          <div className="flex flex-col flex-1 text-center">
+            <div className="qy:text-5xl font-bold mb-2">
               {getScoreDisplay()}
             </div>
             {getHalfTimeScore() && (
@@ -90,9 +92,9 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
             {getStatusDisplay()}
           </div>
           
-          <Link href={`/teams/${match.awayTeam.id}`} className="text-center">
+          <Link href={`/teams/${match.awayTeam.id}`} className="text-center flex-1 truncate">
             <img src={match.awayTeam.crest} alt={match.awayTeam.name} className="w-16 h-16 mx-auto mb-2" />
-            <h2 className="text-xl font-bold">{match.awayTeam.name}</h2>
+            <h2 className="xs:text-xl font-bold">{match.awayTeam.name}</h2>
             <p className="text-blue-100 text-sm">{match.awayTeam.shortName}</p>
           </Link>
         </div>
@@ -126,7 +128,7 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
       </div>
 
       {/* Tab Content */}
-      <div className="p-6">
+      <div className="py-6 px-2">
         {activeTab === 'overview' && (
           <div className="space-y-6">
             {/* Match Information */}
@@ -136,39 +138,39 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Competition:</span>
-                    <span className="font-medium">{match.competition.name}</span>
+                    <span className="font-medium text-end">{match.competition.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Stage:</span>
-                    <span className="font-medium">{match.stage}</span>
+                    <span className="font-medium text-end">{match.stage}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Matchday:</span>
-                    <span className="font-medium">{match.matchday}</span>
+                    <span className="font-medium text-end">{match.matchday}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Status:</span>
-                    <span className="font-medium">{match.status}</span>
+                    <span className="font-medium text-end">{match.status}</span>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Date:</span>
-                    <span className="font-medium">{formatDate(match.utcDate)}</span>
+                    <span className="font-medium text-end justify-end">{formatDate(match.utcDate)}</span>
                   </div>
                   {match.score.winner && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Winner:</span>
-                      <span className="font-medium text-green-600">{match.score.winner}</span>
+                      <span className="font-medium text-end text-green-600">{match.score.winner}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span className="text-gray-600">Duration:</span>
-                    <span className="font-medium">{match.score.duration}</span>
+                    <span className="font-medium text-end">{match.score.duration}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Last Updated:</span>
-                    <span className="font-medium">{new Date(match.lastUpdated).toLocaleString()}</span>
+                    <span className="font-medium text-end">{new Date(match.lastUpdated).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -176,7 +178,7 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
 
             {/* Teams Information */}
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-blue-50 rounded-lg p-6">
+              <div onClick={() => router.push(`/teams/${match.homeTeam.id}`)} className="bg-blue-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 text-blue-700">Home Team</h3>
                 <div className="flex items-center space-x-4 mb-4">
                   <img src={match.homeTeam.crest} alt={match.homeTeam.name} className="w-12 h-12" />
@@ -187,7 +189,7 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
                 </div>
               </div>
 
-              <div className="bg-red-50 rounded-lg p-6">
+              <div onClick={() => router.push(`/teams/${match.awayTeam.id}`)} className="bg-red-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 text-red-700">Away Team</h3>
                 <div className="flex items-center space-x-4 mb-4">
                   <img src={match.awayTeam.crest} alt={match.awayTeam.name} className="w-12 h-12" />

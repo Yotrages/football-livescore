@@ -176,7 +176,7 @@ export interface NewsItem {
 
 export interface Match {
   id: string;
-  matchday: string;
+  matchday: number;
   lastUpdated: string;
   odds: {
     msg: string;
@@ -252,6 +252,13 @@ export interface Match {
     startDate: string;
     winner: string | null;
   };
+}
+
+export interface StandingGroup {
+  stage: string;
+  type: string;
+  group?: string;
+  table: LeagueStanding[];
 }
 
 export interface LeagueStanding {

@@ -203,7 +203,7 @@ const SingleTeamPage = () => {
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Current Competitions</h2>
                 <div className="space-y-3">
                   {teamData.runningCompetitions && teamData.runningCompetitions?.map((competition) => (
-                    <div key={competition.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div onClick={() => router.push(`/leagues/${competition.id}`)} key={competition.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                       {competition.emblem && (
                         <div className="w-8 h-8 relative">
                         <img

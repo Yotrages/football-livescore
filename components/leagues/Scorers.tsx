@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { SingleCompetitionScorers } from '@/types';
 import { FaTrophy, FaFootballBall, FaHandsHelping, FaBullseye, FaCalendar, FaGamepad, FaFlag, FaBirthdayCake, FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'goals' | 'assists' | 'matches' | 'penalties'>('goals');
+  const router = useRouter()
 
   const filteredAndSortedScorers = data.scorers
     .filter(scorer => 
@@ -111,7 +113,7 @@ export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = 
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">🏆 Top 3 Scorers</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {filteredAndSortedScorers.slice(0, 3).map((scorer, index) => (
-            <div key={scorer.player.id} className={`relative overflow-hidden rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ${
+            <div onClick={() => router.push(`/players/${scorer.player.id}`)} key={scorer.player.id} className={`relative overflow-hidden rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ${
               index === 0 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 md:scale-110' :
               index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
               'bg-gradient-to-br from-amber-500 to-amber-700'

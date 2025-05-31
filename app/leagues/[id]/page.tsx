@@ -26,7 +26,7 @@ const LeaguePage = () => {
     data: leagueDetails,
     isLoading: leagueLoading,
     error: leagueErrors,
-  } = useSingleLeague(id, 300000);
+  } = useSingleLeague(id, 3000000);
   const {
     data: standings,
     isLoading: standingsLoading,
@@ -60,7 +60,6 @@ const LeaguePage = () => {
                    !!(resultsError && resultsError) || 
                    !!(scorersError && scorersError);
 
-  // Check if critical data is missing or empty
   const isCriticalDataMissing = !leagueDetails || 
                                (typeof leagueDetails === 'object' && Object.keys(leagueDetails).length === 0) ||
                                !leagueDetails.name;
@@ -76,7 +75,6 @@ const LeaguePage = () => {
     );
   }
 
-  // Show error screen if there are errors OR if critical data is missing
   if (hasErrors || isCriticalDataMissing) {
     console.log('Showing error screen because:', { hasErrors, isCriticalDataMissing });
     return (
@@ -118,7 +116,7 @@ const LeaguePage = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="relative h-32 w-32 md:h-40 md:w-40 mb-4 md:mb-0">
               <img
-                src={leagueDetails?.area?.flag || "/placeholder-league.png"}
+                src={leagueDetails?.area?.flag || leagueDetails.emblem}
                 alt={leagueDetails?.name}
               />
             </div>
@@ -127,7 +125,7 @@ const LeaguePage = () => {
                 {leagueDetails?.name}
               </h1>
               <p className="text-gray-600 mb-1">{leagueDetails?.area?.name}</p>
-              <p className="text-gray-600 mb-4">Season: {season}</p>
+              <p className="text-gray-600 mb-4">{leagueDetails.type === "LEAGUE" ? <p>Season: {season}</p> : <p>Year: {seasonStart}</p>}</p>
               <div className="bg-gray-100 rounded-lg p-3 inline-block">
                 <p className="text-sm">
                   Current Matchday:{" "}
@@ -136,7 +134,7 @@ const LeaguePage = () => {
                   </span>
                 </p>
                 <p className="text-sm">
-                  Season Period: <span className="font-bold">{season}</span>
+                  Season Period: <span className="font-bold">{leagueDetails.type === "LEAGUE" ? <p>Season: {season}</p> : <p>Year: {seasonStart}</p>}</span>
                 </p>
               </div>
             </div>

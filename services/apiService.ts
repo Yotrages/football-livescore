@@ -1,7 +1,6 @@
-import { League, LeagueStanding, Match, MatchDetail, SingleCompetitionScorers, SinglePlayer, SingleTeam, SingleTeamMatches } from "@/types";
+import { League, LeagueStanding, Match, MatchDetail, SingleCompetitionScorers, SinglePlayer, SingleTeam, SingleTeamMatches, StandingGroup } from "@/types";
 import axios from "axios";
 
-// Create an axios instance
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "https://football-backend-yx62.onrender.com/api",
   headers: {
@@ -70,7 +69,6 @@ const footballService = {
   getSingleLeague: async (leagueId: any): Promise<League> => {
     try {
       const response = await api.get(`/football/leagues/${leagueId}`);
-      // Extract standings from the first table (usually TOTAL)
       return response.data || {};
     } catch (error) {
       console.error(`Error fetching standings for league ${leagueId}:`, error);
@@ -82,7 +80,6 @@ const footballService = {
   getSingleCompetitionScorers: async (leagueId: any): Promise<SingleCompetitionScorers> => {
     try {
       const response = await api.get(`/football/competitions/${leagueId}/scorers`);
-      // Extract standings from the first table (usually TOTAL)
       return response.data || {};
     } catch (error) {
       console.error(`Error fetching standings for league ${leagueId}:`, error);
@@ -94,7 +91,6 @@ const footballService = {
   getSingleTeamMatches: async (leagueId: any): Promise<SingleTeamMatches> => {
     try {
       const response = await api.get(`/football/teams/${leagueId}/matches`);
-      // Extract standings from the first table (usually TOTAL)
       return response.data || {};
     } catch (error) {
       console.error(`Error fetching standings for league ${leagueId}:`, error);
@@ -106,7 +102,6 @@ const footballService = {
   getSingleLeagueMatches: async (leagueId: any): Promise<Match[]> => {
     try {
       const response = await api.get(`/football/leagues/${leagueId}/matches`);
-      // Extract standings from the first table (usually TOTAL)
       return response.data.matches || [];
     } catch (error) {
       console.error(`Error fetching standings for league ${leagueId}:`, error);
@@ -120,7 +115,6 @@ const footballService = {
       const response = await api.get(
         `/football/leagues/${leagueId}/prevmatches`
       );
-      // Extract standings from the first table (usually TOTAL)
       return response.data.matches || [];
     } catch (error) {
       console.error(`Error fetching standings for league ${leagueId}:`, error);
@@ -129,16 +123,31 @@ const footballService = {
   },
 
   // Get league standings
-  getLeagueStandings: async (leagueId: any): Promise<LeagueStanding[]> => {
-    try {
-      const response = await api.get(`/football/leagues/${leagueId}/standings`);
-      // Extract standings from the first table (usually TOTAL)
-      return response.data.standings[0]?.table || [];
-    } catch (error) {
-      console.error(`Error fetching standings for league ${leagueId}:`, error);
-      return [];
+ getLeagueStandings: async (leagueId: any): Promise<StandingGroup[] | LeagueStanding[]> => {
+  try {
+    const response = await api.get(`/football/leagues/${leagueId}/standings`);
+    
+    console.log('API Response Structure:', response.data);
+    
+    if (response.data.standings) {
+      if (Array.isArray(response.data.standings)) {
+        return response.data.standings;
+      }
+      
     }
-  },
+    
+    if (Array.isArray(response.data.standings) && response.data.standings[0]?.table) {
+      return response.data.standings[0]?.table;
+    }
+    
+    console.warn('Unexpected standings structure:', response.data);
+    return [];
+    
+  } catch (error) {
+    console.error(`Error fetching standings for league ${leagueId}:`, error);
+    return [];
+  }
+},
 
   // Get single Team
   getTeamInfo: async (teamId: any): Promise<SingleTeam> => {

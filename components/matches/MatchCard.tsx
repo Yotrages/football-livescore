@@ -43,7 +43,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
             )}
             <span>{match.competition.name}</span>
           </span>
-          {match.matchday && <span className="ml-auto">Matchday {match.matchday}</span>}
+          {match.matchday && match.matchday !== 0 ? <span className="ml-auto">Matchday {match.matchday}</span> : ''}
         </div>
       )}
 
@@ -63,7 +63,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
           {/* Home team */}
           <Link href={`/teams/${match.homeTeam.id}`} className="flex items-center w-2/5">
             {match.homeTeam.crest && (
-              <img 
+              <img
                 src={match.homeTeam.crest} 
                 alt={match.homeTeam.shortName} 
                 className="w-6 h-6 mr-2"

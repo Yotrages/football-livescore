@@ -54,7 +54,7 @@ export const getStatusClass = (status: string): string => {
     case 'IN_PLAY':
       return 'bg-red-600 text-white';
     case 'PAUSED':
-      return 'bg-yellow-500 text-white';
+      return 'green text-white';
     case 'FINISHED':
       return 'green text-white';
     case 'POSTPONED':

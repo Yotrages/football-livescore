@@ -12,9 +12,8 @@ export default function MatchDetailPage() {
 const params = useParams();
   const id = params.id;
   console.log(id)
-  const { data: matchData, isLoading, error } = useMatchDetails(id, 10000);
+  const { data: matchData, isLoading, error } = useMatchDetails(id, 3000000);
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -23,7 +22,6 @@ const params = useParams();
     );
   }
 
-  // Error state
   if (error || !matchData) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -58,8 +56,7 @@ const params = useParams();
         />
       </Head>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Back Navigation */}
+      <main className="container mx-auto px-2 xs:px-4 py-8">
         <div className="mb-6">
           <button
             onClick={() => router.back()}
@@ -70,7 +67,6 @@ const params = useParams();
           </button>
         </div>
 
-        {/* Match Details Component */}
         <MatchDetails match={match} />
       </main>
     </div>
