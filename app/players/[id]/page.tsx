@@ -1,5 +1,6 @@
 "use client"
 import { useSinglePlayer } from '@/hooks/useLiveData';
+import { calculateAge, formatDate, getPositionColor } from '@/utils/formatters';
 import { useParams, useRouter } from 'next/navigation';
 import { FaArrowLeft, FaBuilding, FaCalendar, FaGlobe, FaTrophy, FaUser, FaVest } from 'react-icons/fa';
 import { MdPerson } from 'react-icons/md';
@@ -9,7 +10,7 @@ const SinglePlayerPage: React.FC = () => {
   const param = useParams()
   const id = param.id
 
-  const {data: selectedPlayer, isLoading: playerLoading, error: playerError} = useSinglePlayer(id, 30000000)
+  const {data: selectedPlayer, isLoading: playerLoading, error: playerError} = useSinglePlayer(id, 3600000)
 
   if (playerLoading) {
     return (
@@ -40,41 +41,6 @@ const SinglePlayerPage: React.FC = () => {
         </div>
       );
     }
-
-  const calculateAge = (dateOfBirth: string) => {
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getPositionColor = (position: string) => {
-    const positionColors: { [key: string]: string } = {
-      'Goalkeeper': 'bg-yellow-100 text-yellow-800',
-      'Centre-Back': 'bg-blue-100 text-blue-800',
-      'Left-Back': 'bg-blue-100 text-blue-800',
-      'Right-Back': 'bg-blue-100 text-blue-800',
-      'Defensive Midfield': 'bg-green-100 text-green-800',
-      'Central Midfield': 'bg-green-100 text-green-800',
-      'Attacking Midfield': 'bg-purple-100 text-purple-800',
-      'Left Winger': 'bg-orange-100 text-orange-800',
-      'Right Winger': 'bg-orange-100 text-orange-800',
-      'Centre-Forward': 'bg-red-100 text-red-800'
-    };
-    return positionColors[position] || 'bg-gray-100 text-gray-800';
-  };
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">

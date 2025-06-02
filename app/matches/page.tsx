@@ -10,7 +10,7 @@ const Page = () => {
     data: matches,
     error: matchesError,
     isLoading: matchesLoading,
-  } = useTodayMatches(300000000);
+  } = useTodayMatches(30000);
   const router = useRouter();
 
   if (matchesLoading) {

@@ -21,17 +21,17 @@ const LeaguePage = () => {
     data: fixtures,
     isLoading: fixturesLoading,
     error: fixturesError,
-  } = useSingleLeagueMatches(id, 300000);
+  } = useSingleLeagueMatches(id, 30000);
   const {
     data: leagueDetails,
     isLoading: leagueLoading,
     error: leagueErrors,
-  } = useSingleLeague(id, 3000000);
+  } = useSingleLeague(id, 300000);
   const {
     data: standings,
     isLoading: standingsLoading,
     error: standingsError,
-  } = useLeagueStandings(id, 300000);
+  } = useLeagueStandings(id, 60000);
   const {
     data: results,
     isLoading: resultsLoading,
@@ -41,7 +41,7 @@ const LeaguePage = () => {
     data: scorers,
     isLoading: scorersLoading,
     error: scorersError,
-  } = useSingleCompetitionScorers(id, 380000);
+  } = useSingleCompetitionScorers(id, 3600000);
   const [activeTab, setActiveTab] = useState<
     "standings" | "fixtures" | "results" | "scorers"
   >("standings");

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { FaArrowLeft, FaTrophy, FaSearch, FaFilter, FaGlobe } from 'react-icons/fa';
 
 const Page = () => {
-  const { data: featuredLeagues, error: leagueErrors, isLoading: leagueLoading } = useLeagues(3000000);
+  const { data: featuredLeagues, error: leagueErrors, isLoading: leagueLoading } = useLeagues(3600000);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('all');

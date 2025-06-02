@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSingleTeamMatches, useTeamInfo } from '@/hooks/useLiveData';
 import { FaArrowLeft, FaCalendar, FaExternalLinkAlt, FaGlobe, FaMapPin, FaShieldAlt, FaTrophy, FaUser, FaUsers } from 'react-icons/fa';
 import MatchCard from '@/components/matches/MatchCard';
+import { formatDate } from '@/utils/formatters';
 
 const SingleTeamPage = () => {
   const params = useParams();
@@ -12,7 +13,7 @@ const SingleTeamPage = () => {
   const teamId = params.id;
   
   const { data: teamData, isLoading: teamLoading, error: teamError } = useTeamInfo(teamId, 30000);
-  const { data: matchesData, isLoading: matchesLoading } = useSingleTeamMatches(teamId, 300000);
+  const { data: matchesData, isLoading: matchesLoading } = useSingleTeamMatches(teamId, 30000);
   
 
   const [activeTab, setActiveTab] = useState<'overview' | 'squad' | 'matches' | 'stats'>('overview');
@@ -46,14 +47,6 @@ const SingleTeamPage = () => {
       </div>
     );
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   const getPositionColor = (position: string) => {
     const pos = position.toLowerCase();

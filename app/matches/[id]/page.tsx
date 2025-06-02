@@ -12,7 +12,7 @@ export default function MatchDetailPage() {
 const params = useParams();
   const id = params.id;
   console.log(id)
-  const { data: matchData, isLoading, error } = useMatchDetails(id, 3000000);
+  const { data: matchData, isLoading, error } = useMatchDetails(id, 30000);
 
   if (isLoading) {
     return (
