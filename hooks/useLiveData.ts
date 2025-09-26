@@ -47,7 +47,6 @@ const useLiveData = <T>(
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null | string>(null);
 
-  // Function to fetch data based on dataType
   const fetchData = async () => {
     try {
       let result;
@@ -83,10 +82,10 @@ const useLiveData = <T>(
           );
           break; 
         case "getMatchDetails":
-          if (!params?.matchId) // ✅ Fixed parameter check
+          if (!params?.matchId) 
             throw new Error("Match ID is required for match details");
           result = await footballService.getMatchDetails(
-            params?.matchId // ✅ Fixed parameter name
+            params?.matchId 
           );
           break; 
         case "getSingleLeaguePrevMatches":
@@ -147,18 +146,14 @@ const useLiveData = <T>(
     }
   };
 
-  // Initial data fetch
   useEffect(() => {
     fetchData();
 
-    // Set up polling interval
     const intervalId = setInterval(fetchData, refreshInterval);
 
-    // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, [dataType, JSON.stringify(params)]);
 
-  // Function to manually refresh data
   const refresh = async () => {
     setIsLoading(true);
     await fetchData();
@@ -191,7 +186,6 @@ export const useTodayMatches = (refreshInterval: number = 30000) => {
  * @returns Upcoming matches data with loading and error states
  */
 export const useUpcomingMatches = (refreshInterval: number = 300000) => {
-  // 5 minutes
   return useLiveData<Match[]>("upcomingMatches", refreshInterval);
 }
 
@@ -201,7 +195,6 @@ export const useUpcomingMatches = (refreshInterval: number = 300000) => {
  * @returns Previous matches data with loading and error states
  */
 export const usePreviousMatches = (refreshInterval: number = 300000) => {
-  // 5 minutes
   return useLiveData<Match[]>("previousMatches", refreshInterval);
 }
 
@@ -215,7 +208,6 @@ export const useLeagueStandings = (
   leagueId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<LeagueStanding[]>("leagueStandings", refreshInterval, {
     leagueId,
   });
@@ -230,38 +222,35 @@ export const useTeamInfo = (
   teamId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<SingleTeam>("getTeamInfo", refreshInterval, {
     teamId,
   });
 }
 /**
- * Specialized hook for league standings
- * @param leagueId - ID of the league
+ * Specialized hook for single player
+ * @param playerId - ID of the player
  * @param refreshInterval - Polling interval in milliseconds
- * @returns League standings data with loading and error states
+ * @returns player data with loading and error states
  */
 export const useSinglePlayer = (
   playerId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<SinglePlayer>("getSinglePlayer", refreshInterval, {
     playerId,
   });
 }
 
 /**
- * Specialized hook for league standings
- * @param leagueId - ID of the league
+ * Specialized hook for team matches
+ * @param leagueId - ID of the team
  * @param refreshInterval - Polling interval in milliseconds
- * @returns League standings data with loading and error states
+ * @returns Team matches data with loading and error states
  */
 export const useSingleTeamMatches = (
   leagueId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<SingleTeamMatches>("getSingleTeamMatches", refreshInterval, {
     leagueId,
   });
@@ -276,7 +265,6 @@ export const useSingleCompetitionScorers = (
   leagueId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<SingleCompetitionScorers>("getSingleCompetitionScorers", refreshInterval, {
     leagueId,
   });
@@ -289,12 +277,11 @@ export const useSingleCompetitionScorers = (
  * @returns Match details data with loading and error states
  */
 export const useMatchDetails = (
-  matchId: any, // ✅ Fixed parameter name
+  matchId: any, 
   refreshInterval: number = 600000
 ) =>  {
-  // 10 minutes
   return useLiveData<MatchDetail>("getMatchDetails", refreshInterval, {
-    matchId, // ✅ Fixed parameter name
+    matchId, 
   });
 }
 
@@ -308,7 +295,6 @@ export const useSingleLeague = (
   leagueId: any,
   refreshInterval: number = 600000
 ) =>  {
-  // 10 minutes
   return useLiveData<League>("getSingleLeague", refreshInterval, { leagueId });
 }
 
@@ -322,7 +308,6 @@ export const useSingleLeagueMatches = (
   leagueId: any,
   refreshInterval: number = 600000
 ) =>  {
-  // 10 minutes
   return useLiveData<Match[]>("getSingleLeagueMatches", refreshInterval, {
     leagueId,
   });
@@ -338,7 +323,6 @@ export const useSingleLeaguePrevMatches = (
   leagueId: any,
   refreshInterval: number = 600000
 ) => {
-  // 10 minutes
   return useLiveData<Match[]>("getSingleLeaguePrevMatches", refreshInterval, {
     leagueId,
   });
@@ -350,7 +334,6 @@ export const useSingleLeaguePrevMatches = (
  * @returns Leagues data with loading and error states
  */
 export const useLeagues = (refreshInterval: number = 3600000) => {
-  // 1 hour
   return useLiveData<League[]>("leagues", refreshInterval);
 }
 

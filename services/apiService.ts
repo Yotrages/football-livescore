@@ -9,7 +9,6 @@ const api = axios.create({
 });
 
 const footballService = {
-  // Get today matches
   getTodayMatches: async (): Promise<Match[]> => {
     try {
       const response = await api.get("/football/matches");
@@ -19,7 +18,6 @@ const footballService = {
       return [];
     }
   },
-  // Get live matches
   getLiveMatches: async (): Promise<Match[]> => {
     try {
       const response = await api.get("/football/live-matches");
@@ -31,7 +29,6 @@ const footballService = {
     }
   },
 
-  // Get upcoming matches
   getUpcomingMatches: async (): Promise<Match[]> => {
     try {
       const response = await api.get("/football/upcoming-matches");
@@ -42,7 +39,6 @@ const footballService = {
     }
   },
 
-  // get previous Matches
 
   getPreviousMatches: async (): Promise<Match[]> => {
     try {
@@ -54,7 +50,6 @@ const footballService = {
     }
   },
 
-  // Get competitions/leagues
   getLeagues: async (): Promise<League[]> => {
     try {
       const response = await api.get("/football/leagues");
@@ -65,7 +60,6 @@ const footballService = {
     }
   },
 
-  // get Single League
   getSingleLeague: async (leagueId: any): Promise<League> => {
     try {
       const response = await api.get(`/football/leagues/${leagueId}`);
@@ -76,7 +70,6 @@ const footballService = {
     }
   },
 
-  // get Single competition top scorers
   getSingleCompetitionScorers: async (leagueId: any): Promise<SingleCompetitionScorers> => {
     try {
       const response = await api.get(`/football/competitions/${leagueId}/scorers`);
@@ -87,7 +80,6 @@ const footballService = {
     }
   },
 
-  // get Single team matches
   getSingleTeamMatches: async (leagueId: any): Promise<SingleTeamMatches> => {
     try {
       const response = await api.get(`/football/teams/${leagueId}/matches`);
@@ -98,7 +90,6 @@ const footballService = {
     }
   },
 
-  // get Single League
   getSingleLeagueMatches: async (leagueId: any): Promise<Match[]> => {
     try {
       const response = await api.get(`/football/leagues/${leagueId}/matches`);
@@ -109,7 +100,6 @@ const footballService = {
     }
   },
 
-  // get Single League previous Matches
   getSingleLeaguePrevMatches: async (leagueId: any): Promise<Match[]> => {
     try {
       const response = await api.get(
@@ -122,7 +112,6 @@ const footballService = {
     }
   },
 
-  // Get league standings
  getLeagueStandings: async (leagueId: any): Promise<StandingGroup[] | LeagueStanding[]> => {
   try {
     const response = await api.get(`/football/leagues/${leagueId}/standings`);
@@ -149,7 +138,6 @@ const footballService = {
   }
 },
 
-  // Get single Team
   getTeamInfo: async (teamId: any): Promise<SingleTeam> => {
     try {
       const response = await api.get(`/football/teams/${teamId}`);
@@ -160,7 +148,6 @@ const footballService = {
     }
   },
 
-  // Get player details
   getSinglePlayer: async (playerId: any): Promise<SinglePlayer> => {
     try {
       const response = await api.get(`/football/persons/${playerId}`);
@@ -171,7 +158,6 @@ const footballService = {
     }
   },
 
-  // Get match details
   getMatchDetails: async (matchId: any): Promise<MatchDetail | null> => {
     try {
       const response = await api.get(`/football/matches/${matchId}`);

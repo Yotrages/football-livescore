@@ -1,4 +1,3 @@
-// src/components/matches/MatchCard.tsx
 "use client"
 import { useRouter } from 'next/navigation';
 import { Match } from '@/types';

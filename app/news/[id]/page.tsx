@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowLeft, FaCalendar, FaGlobe, FaShare, FaTag, FaUser } from 'react-icons/fa';
 
-// Types
 interface NewsArticle {
   id: string;
   title: string;

@@ -20,7 +20,6 @@ const NewsCard: React.FC<NewsCardProps> = ({
   publishedAt,
   source,
 }) => {
-  // Format the date to be more readable
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { 
       year: 'numeric', 
@@ -32,7 +31,6 @@ const NewsCard: React.FC<NewsCardProps> = ({
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  // Limit summary to a reasonable length
   const truncateSummary = (text: string, maxLength = 120) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength).trim() + '...';

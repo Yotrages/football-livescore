@@ -16,13 +16,6 @@ import {
   twitter,
   whatsapp,
 } from "@/public/assets/home";
-// import { AdminIcon } from "@/components/shared/admin-icon";
-// import { FileIcon } from "@/components/shared/file-icon";
-// import { HelpIcon } from "@/components/shared/help-icon";
-// import { HomeIcon } from "@/components/shared/home-icon";
-// import { LandIcon } from "@/components/shared/land-icon";
-// import { SettingsIcon } from "@/components/shared/settings-icon";
-// import { UserIcon } from "@/components/shared/user-icon";
 import { ayisat, btn_icon_one, david, essien, mary, sandra } from "@/public/assets/admin";
 
 export const tablecheckboxClassNames =

@@ -239,7 +239,6 @@ const Page = () => {
             </div>
           </div>
           
-          {/* Uncommented news section for when ready */}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestNews.map((news) => (
               <div key={news.id} className="transform hover:scale-105 transition-all duration-300">

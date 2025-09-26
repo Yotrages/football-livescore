@@ -11,7 +11,6 @@ const Page = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('all');
 
-  // Loading state
   if (leagueLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -55,7 +54,6 @@ const Page = () => {
     );
   }
 
-  // Error state
   if (leagueErrors || !featuredLeagues) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -104,7 +102,6 @@ const Page = () => {
     );
   }
 
-  // Process and filter leagues
   const sortedLeagues = featuredLeagues ? [...featuredLeagues].sort((a, b) => {
     if (a.name && b.name) {
       return a.name.localeCompare(b.name);
@@ -112,10 +109,8 @@ const Page = () => {
     return 0;
   }) : [];
 
-  // Get unique countries for filter
   const countries = [...new Set(sortedLeagues.map(league => league.name || 'Unknown').filter(Boolean))].sort();
 
-  // Filter leagues based on search and country
   const filteredLeagues = sortedLeagues.filter(league => {
     const matchesSearch = !searchTerm || 
       league.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -233,7 +228,6 @@ const Page = () => {
             ))}
           </div>
         ) : sortedLeagues.length > 0 ? (
-          // No results from filtering
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
               <FaSearch className="w-10 h-10 text-blue-400" />

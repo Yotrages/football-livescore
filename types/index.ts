@@ -366,8 +366,3 @@ export interface MatchDetail {
         }
     ]
 }
-type ApiResponse<T> = {
-  data: T;
-  status: number;
-  message: string
-}

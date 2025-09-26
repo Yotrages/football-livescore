@@ -1,4 +1,3 @@
-// src/components/matches/LiveMatches.tsx
 'use client';
 
 import { useState } from 'react';
@@ -7,13 +6,13 @@ import { useLiveMatches } from '@/hooks/useLiveData';
 import MatchCard from './MatchCard';
 
 const LiveMatches: React.FC = () => {
-  const { data: matches, isLoading, error, refresh } = useLiveMatches(30000); // 30 seconds refresh interval
+  const { data: matches, isLoading, error, refresh } = useLiveMatches(30000); 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refresh();
-    setTimeout(() => setIsRefreshing(false), 500); // Keep the icon spinning for a short time for visual feedback
+    setTimeout(() => setIsRefreshing(false), 500); 
   };
 
   return (
