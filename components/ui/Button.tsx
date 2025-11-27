@@ -63,7 +63,6 @@ export const Button = ({
   py = "12px",
   px = "16px",
   color,
-  background,
   font = "14px",
   children,
   font_family,
