@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import Head from "next/head";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import LeagueTable from "@/components/leagues/LeagueTable";
 import MatchCard from "@/components/matches/MatchCard";
 import {
@@ -12,254 +11,222 @@ import {
   useSingleLeaguePrevMatches,
 } from "@/hooks/useLiveData";
 import { CompetitionScorers } from "@/components/leagues/Scorers";
-import { FaShieldAlt } from "react-icons/fa";
+import { FaArrowLeft, FaRedo } from "react-icons/fa";
 
 const LeaguePage = () => {
   const params = useParams();
+  const router = useRouter();
   const id = params.id;
-  const {
-    data: fixtures,
-    isLoading: fixturesLoading,
-    error: fixturesError,
-  } = useSingleLeagueMatches(id, 30000);
-  const {
-    data: leagueDetails,
-    isLoading: leagueLoading,
-    error: leagueErrors,
-  } = useSingleLeague(id, 300000);
-  const {
-    data: standings,
-    isLoading: standingsLoading,
-    error: standingsError,
-  } = useLeagueStandings(id, 60000);
-  const {
-    data: results,
-    isLoading: resultsLoading,
-    error: resultsError,
-  } = useSingleLeaguePrevMatches(id, 300000);
-  const {
-    data: scorers,
-    isLoading: scorersLoading,
-    error: scorersError,
-  } = useSingleCompetitionScorers(id, 3600000);
-  const [activeTab, setActiveTab] = useState<
-    "standings" | "fixtures" | "results" | "scorers"
-  >("standings");
 
-  console.log('Debug info:', {
-    fixtures, results, standings, scorers, leagueDetails,
-    fixturesError, leagueErrors, standingsError, resultsError, scorersError,
-    fixturesLoading, leagueLoading, standingsLoading, scorersLoading, resultsLoading
-  });
+  const { data: fixtures, isLoading: fixturesLoading } = useSingleLeagueMatches(id, 30000);
+  const { data: leagueDetails, isLoading: leagueLoading, error: leagueErrors } = useSingleLeague(id, 300000);
+  const { data: standings, isLoading: standingsLoading } = useLeagueStandings(id, 60000);
+  const { data: results, isLoading: resultsLoading } = useSingleLeaguePrevMatches(id, 300000);
+  const { data: scorers, isLoading: scorersLoading } = useSingleCompetitionScorers(id, 3600000);
+
+  const [activeTab, setActiveTab] = useState<"standings" | "fixtures" | "results" | "scorers">("standings");
 
   const isLoading = fixturesLoading || leagueLoading || standingsLoading || scorersLoading || resultsLoading;
-
-  const hasErrors = !!(fixturesError && fixturesError) || 
-                   !!(leagueErrors && leagueErrors) || 
-                   !!(standingsError && standingsError) || 
-                   !!(resultsError && resultsError) || 
-                   !!(scorersError && scorersError);
-
-  const isCriticalDataMissing = !leagueDetails || 
-                               (typeof leagueDetails === 'object' && Object.keys(leagueDetails).length === 0) ||
-                               !leagueDetails.name;
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading league information...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (hasErrors || isCriticalDataMissing) {
-    console.log('Showing error screen because:', { hasErrors, isCriticalDataMissing });
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <FaShieldAlt className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            League Not Found
-          </h1>
-          <p className="text-gray-600 mb-4">
-            Unable to load league information
-            {hasErrors && <span className="block text-sm mt-2">Error occurred - Please try again later</span>}
-            {isCriticalDataMissing && <span className="block text-sm mt-2">League data is missing</span>}
-          </p>
-          <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              Try Again
-            </button>
-        </div>
-      </div>
-    );
-  }
+  const isCriticalDataMissing = !leagueDetails || !leagueDetails.name;
 
   const seasonStart = leagueDetails?.currentSeason?.startDate?.slice(0, 4) || 'N/A';
   const seasonEnd = leagueDetails?.currentSeason?.endDate?.slice(0, 4) || 'N/A';
   const season = seasonStart !== 'N/A' && seasonEnd !== 'N/A' ? `${seasonStart}/${seasonEnd}` : 'Unknown Season';
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <Head>
-        <title>Football Livescore & News</title>
-      </Head>
-
-      <main className="container mx-auto px-2 xs:px-4 py-8">
-        {/* League Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="relative h-32 w-32 md:h-40 md:w-40 mb-4 md:mb-0">
-              <img
-                src={leagueDetails?.area?.flag || leagueDetails.emblem}
-                alt={leagueDetails?.name}
-              />
+  if (isLoading) {
+    return (
+      <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="skeleton w-8 h-8 rounded-lg"></div>
+            <div className="skeleton h-5 w-48 rounded"></div>
+          </div>
+          {/* Header skeleton */}
+          <div className="rounded-2xl p-6 mb-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+            <div className="flex items-center gap-5">
+              <div className="skeleton w-20 h-20 rounded-xl"></div>
+              <div className="flex-1 space-y-2">
+                <div className="skeleton h-6 w-52 rounded"></div>
+                <div className="skeleton h-4 w-32 rounded"></div>
+                <div className="skeleton h-4 w-24 rounded"></div>
+              </div>
             </div>
-            <div className="md:ml-8 text-center md:text-left">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {leagueDetails?.name}
-              </h1>
-              <p className="text-gray-600 mb-1">{leagueDetails?.area?.name}</p>
-              <p className="text-gray-600 mb-4">{leagueDetails.type === "LEAGUE" ? <p>Season: {season}</p> : <p>Year: {seasonStart}</p>}</p>
-              <div className="bg-gray-100 rounded-lg p-3 inline-block">
-                <p className="text-sm">
-                  Current Matchday:{" "}
-                  <span className="font-bold">
-                    {leagueDetails?.currentSeason?.currentMatchday}
+          </div>
+          {/* Tab skeleton */}
+          <div className="skeleton h-10 w-full rounded-xl mb-6"></div>
+          {/* Content skeleton */}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+            <div className="p-4 space-y-2">
+              {[...Array(10)].map((_, i) => <div key={i} className="skeleton h-10 rounded-lg"></div>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (leagueErrors || isCriticalDataMissing) {
+    return (
+      <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }} className="flex items-center justify-center">
+        <div className="text-center py-20 px-4">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h1 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>League Not Found</h1>
+          <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+            Unable to load league information. Please try again later.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold mx-auto"
+            style={{ background: 'var(--accent-blue)', color: '#fff' }}
+          >
+            <FaRedo size={12} /> Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const tabs = [
+    { key: 'standings', label: 'Standings' },
+    { key: 'fixtures', label: 'Fixtures' },
+    { key: 'results', label: 'Results' },
+    { key: 'scorers', label: 'Top Scorers' },
+  ] as const;
+
+  return (
+    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        {/* Back button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 mb-5 text-sm font-medium transition-colors"
+          style={{ color: 'var(--text-secondary)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+        >
+          <FaArrowLeft size={12} /> Back
+        </button>
+
+        {/* League Header Card */}
+        <div
+          className="rounded-2xl overflow-hidden mb-6"
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
+        >
+          <div
+            className="relative px-5 py-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(41,121,255,0.12) 0%, rgba(0,0,0,0) 60%)',
+            }}
+          >
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div
+                className="flex-shrink-0 flex items-center justify-center w-20 h-20 rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+              >
+                <img
+                  src={leagueDetails?.emblem || leagueDetails?.area?.flag}
+                  alt={leagueDetails?.name}
+                  className="w-14 h-14 object-contain"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                />
+              </div>
+              <div className="text-center sm:text-left flex-1">
+                <h1 className="font-bold text-2xl mb-1" style={{ fontFamily: 'Rajdhani, sans-serif', color: 'var(--text-primary)', letterSpacing: '0.5px' }}>
+                  {leagueDetails?.name}
+                </h1>
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {leagueDetails?.area?.flag && (
+                    <img
+                      src={leagueDetails.area.flag}
+                      alt={leagueDetails.area.name}
+                      className="w-5 h-4 object-cover rounded-sm"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
+                  )}
+                  <span>{leagueDetails?.area?.name}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)' }}>
+                    {leagueDetails.type === 'LEAGUE' ? `Season ${season}` : `Year ${seasonStart}`}
                   </span>
-                </p>
-                <p className="text-sm">
-                  Season Period: <span className="font-bold">{leagueDetails.type === "LEAGUE" ? <p>Season: {season}</p> : <p>Year: {seasonStart}</p>}</span>
-                </p>
+                  {leagueDetails?.currentSeason?.currentMatchday && (
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,230,118,0.1)', color: 'var(--accent-green)', border: '1px solid rgba(0,230,118,0.2)' }}>
+                      MD {leagueDetails.currentSeason.currentMatchday}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex flex-wrap mb-6 bg-white rounded-lg shadow-md p-1">
-          <button
-            onClick={() => setActiveTab("standings")}
-            className={`flex-1 xs:py-2 py-1 px-2 text-center rounded-md ${
-              activeTab === "standings"
-                ? "bg-blue-600 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            Standings
-          </button>
-          <button
-            onClick={() => setActiveTab("fixtures")}
-            className={`flex-1 xs:py-2 py-1 px-2 text-center rounded-md ${
-              activeTab === "fixtures"
-                ? "bg-blue-600 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            Upcoming Fixtures
-          </button>
-          <button
-            onClick={() => setActiveTab("results")}
-            className={`flex-1 xs:py-2 py-1 px-2 text-center rounded-md ${
-              activeTab === "results"
-                ? "bg-blue-600 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            Recent Results
-          </button>
-          <button
-            onClick={() => setActiveTab("scorers")}
-            className={`flex-1 xs:py-2 py-1 px-2 text-center rounded-md ${
-              activeTab === "scorers"
-                ? "bg-blue-600 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            Top Scorers
-          </button>
+        <div
+          className="flex gap-1 p-1 rounded-xl mb-5"
+          style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)' }}
+        >
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className="flex-1 py-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold rounded-lg transition-all"
+              style={{
+                background: activeTab === tab.key ? 'var(--bg-surface)' : 'transparent',
+                color: activeTab === tab.key ? 'var(--text-primary)' : 'var(--text-secondary)',
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Content based on active tab */}
+        {/* Tab Content */}
         {activeTab === "standings" && (
-          <>
-            {standings ? (
-              <LeagueTable
-                standings={standings}
-                leagueName={leagueDetails.name}
-                season={season}
-              />
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <p className="text-gray-500">Standings data is currently unavailable</p>
-              </div>
-            )}
-          </>
+          standings ? (
+            <LeagueTable standings={standings} leagueName={leagueDetails.name} season={season} />
+          ) : (
+            <div className="py-14 text-center rounded-xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Standings data is currently unavailable</p>
+            </div>
+          )
         )}
 
         {activeTab === "scorers" && (
-          <>
-            {scorers ? (
-              <CompetitionScorers data={scorers} />
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <p className="text-gray-500">Top scorers data is currently unavailable</p>
-              </div>
-            )}
-          </>
+          scorers ? (
+            <CompetitionScorers data={scorers} />
+          ) : (
+            <div className="py-14 text-center rounded-xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Top scorers data is currently unavailable</p>
+            </div>
+          )
         )}
 
         {activeTab === "fixtures" && (
-          <div className="bg-white rounded-lg shadow-md px-2">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
-              Upcoming Fixtures
-            </h2>
+          <div>
             {fixtures && fixtures.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {fixtures.map((match) => (
-                  <MatchCard key={match.id} match={match} />
-                ))}
-              </div>
-            ) : fixtures && fixtures.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                No upcoming fixtures available
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {fixtures.map((match) => <MatchCard key={match.id} match={match} />)}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                Fixtures data is currently unavailable
+              <div className="py-14 text-center rounded-xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No upcoming fixtures available</p>
               </div>
             )}
           </div>
         )}
 
         {activeTab === "results" && (
-          <div className="rounded-lg shadow-md px-2">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
-              Recent Results
-            </h2>
+          <div>
             {results && results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {results.map((match) => (
-                  <MatchCard key={match.id} match={match} />
-                ))}
-              </div>
-            ) : results && results.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                No recent results available
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {results.map((match) => <MatchCard key={match.id} match={match} />)}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                Results data is currently unavailable
+              <div className="py-14 text-center rounded-xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No recent results available</p>
               </div>
             )}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

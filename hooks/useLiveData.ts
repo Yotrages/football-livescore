@@ -10,6 +10,9 @@ import {
   SinglePlayer,
   SingleTeamMatches,
   SingleCompetitionScorers,
+  NewsItem,
+  NewsListResponse,
+  NewsSingleResponse,
 } from "../types";
 
 /**
@@ -338,3 +341,133 @@ export const useLeagues = (refreshInterval: number = 3600000) => {
 }
 
 export default useLiveData;
+
+// ── News hooks ────────────────────────────────────────────────────────────────
+
+export const useLatestNews = (limit = 6, refreshInterval = 300000) => {
+  const [data, setData] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetch = async () => {
+    try {
+      const result = await footballService.getLatestNews(limit);
+      setData(result);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetch();
+    const id = setInterval(fetch, refreshInterval);
+    return () => clearInterval(id);
+  }, [limit]);
+
+  return { data, isLoading, error, refresh: fetch };
+};
+
+export const useFeaturedNews = (limit = 5, refreshInterval = 300000) => {
+  const [data, setData] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetch = async () => {
+    try {
+      const result = await footballService.getFeaturedNews(limit);
+      setData(result);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetch();
+    const id = setInterval(fetch, refreshInterval);
+    return () => clearInterval(id);
+  }, [limit]);
+
+  return { data, isLoading, error, refresh: fetch };
+};
+
+export const useNewsList = (params: {
+  page?: number;
+  limit?: number;
+  category?: string;
+  tag?: string;
+  search?: string;
+} = {}, refreshInterval = 300000) => {
+  const [data, setData] = useState<NewsListResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const paramsKey = JSON.stringify(params);
+
+  const fetch = async () => {
+    try {
+      const result = await footballService.getNewsList(params);
+      setData(result);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch();
+    const id = setInterval(fetch, refreshInterval);
+    return () => clearInterval(id);
+  }, [paramsKey]);
+
+  return { data, isLoading, error, refresh: fetch };
+};
+
+export const useNewsBySlug = (slug: string, refreshInterval = 600000) => {
+  const [data, setData] = useState<NewsSingleResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetch = async () => {
+    if (!slug) return;
+    try {
+      const result = await footballService.getNewsBySlug(slug);
+      setData(result);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetch();
+    const id = setInterval(fetch, refreshInterval);
+    return () => clearInterval(id);
+  }, [slug]);
+
+  return { data, isLoading, error, refresh: fetch };
+};
+
+export const useNewsCategories = () => {
+  const [data, setData] = useState<{ category: string; count: number }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    footballService.getNewsCategories().then((result) => {
+      setData(result);
+      setIsLoading(false);
+    }).catch(() => setIsLoading(false));
+  }, []);
+
+  return { data, isLoading };
+};

@@ -1,74 +1,103 @@
+'use client';
+
 import Link from 'next/link';
-import { FaFutbol, FaTwitter, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaFutbol, FaTwitter, FaFacebook, FaInstagram, FaGithub } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  
+
+  const links = [
+    { href: '/', label: 'Home' },
+    { href: '/matches', label: 'Live Scores' },
+    { href: '/leagues', label: 'Leagues' },
+    { href: '/news', label: 'News' },
+  ];
+
+  const socials = [
+    { href: '#', icon: FaTwitter, label: 'Twitter' },
+    { href: '#', icon: FaFacebook, label: 'Facebook' },
+    { href: '#', icon: FaInstagram, label: 'Instagram' },
+    { href: '#', icon: FaGithub, label: 'GitHub' },
+  ];
+
   return (
-    <footer className="bg-gradient-to-l from-gray-500 w-full to-black text-gray-300">
-      <div className="container mx-auto px-4 py-8 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          {/* Brand and description */}
+    <footer style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+          {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <FaFutbol className="text-2xl text-yellow-400" />
-              <span className="text-xl font-bold text-white">Football LiveScore</span>
+            <Link href="/" className="flex items-center gap-2 mb-3">
+              <FaFutbol style={{ color: 'var(--accent-green)', fontSize: '18px' }} />
+              <span
+                className="text-base font-bold"
+                style={{ fontFamily: 'Rajdhani, sans-serif', color: 'var(--text-primary)', letterSpacing: '1px' }}
+              >
+                FOOTBALL<span style={{ color: 'var(--accent-green)' }}>LIVE</span>
+              </span>
             </Link>
-            <p className="text-sm">
-              Get the latest football scores, match results, fixtures, league tables, and statistics from all major leagues around the world.
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Real-time football scores, fixtures, standings, and statistics from all major leagues worldwide.
             </p>
           </div>
-          
-          {/* Quick links */}
+
+          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              Quick Links
+            </h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="/" className="hover:text-yellow-300 transition duration-150 ease-in-out">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/matches" className="hover:text-yellow-300 transition duration-150 ease-in-out">
-                  Live Scores
-                </Link>
-              </li>
-              <li>
-                <Link href="/leagues" className="hover:text-yellow-300 transition duration-150 ease-in-out">
-                  Leagues & Cups
-                </Link>
-              </li>
-              <li>
-                <Link href="/news" className="hover:text-yellow-300 transition duration-150 ease-in-out">
-                  News & Transfers
-                </Link>
-              </li>
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm transition-colors duration-150"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
-          {/* Connect */}
+
+          {/* Social */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Connect With Us</h3>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition duration-150 ease-in-out">
-                <FaTwitter size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition duration-150 ease-in-out">
-                <FaFacebook size={24} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition duration-150 ease-in-out">
-                <FaInstagram size={24} />
-              </a>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              Connect
+            </h3>
+            <div className="flex gap-3">
+              {socials.map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200"
+                  style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-secondary)' }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(0,230,118,0.12)';
+                    (e.currentTarget as HTMLElement).style.color = 'var(--accent-green)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+                    (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                  }}
+                >
+                  <Icon size={14} />
+                </a>
+              ))}
             </div>
           </div>
         </div>
-        
-        {/* Copyright */}
-        <div className="border-t border-gray-800 mt-8 pt-6 text-sm text-center">
-          <p>© {currentYear} Football LiveScore. All rights reserved.</p>
-          <p className="mt-2 text-gray-500">
-            This site is for educational purposes only and is not affiliated with any sports organization.
-          </p>
+
+        {/* Bottom */}
+        <div
+          className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-6 text-xs"
+          style={{ borderTop: '1px solid var(--border-subtle)', color: 'var(--text-muted)' }}
+        >
+          <span>© {currentYear} FootballLive. All rights reserved.</span>
+          <span>For educational purposes only. Not affiliated with any sports organization.</span>
         </div>
       </div>
     </footer>

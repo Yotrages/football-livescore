@@ -1,13 +1,14 @@
 "use client"
 import { useState } from 'react';
 import { MatchDetail } from '@/types';
-import { FaCalendar, FaClock, FaMapPin } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapPin, FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'officials'>('overview');
-  const router = useRouter()
+  const router = useRouter();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -15,247 +16,378 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
-  const getStatusDisplay = () => {
-    if (match.status === 'FINISHED') {
-      return <span className="text-green-600 font-semibold">Full Time</span>;
-    } else if (match.status === 'IN_PLAY') {
-      return <span className="text-red-600 font-semibold">Live</span>;
-    } else if (match.status === 'PAUSED') {
-      return <span className="text-yellow-600 font-semibold">Half Time</span>;
-    } else if (match.status === 'TIMED') {
-      return <span className="text-blue-600 font-semibold">Scheduled</span>;
-    }
-    return <span className="text-gray-600 font-semibold">{match.status}</span>;
+  const isLive = match.status === 'IN_PLAY' || match.status === 'LIVE';
+  const isHalfTime = match.status === 'PAUSED';
+  const isFinished = match.status === 'FINISHED';
+  const isScheduled = match.status === 'SCHEDULED' || match.status === 'TIMED';
+
+  const getStatusChip = () => {
+    if (isLive) return (
+      <div className="flex items-center gap-2 px-4 py-1.5 rounded-full" style={{ background: 'rgba(0,230,118,0.15)', border: '1px solid rgba(0,230,118,0.3)' }}>
+        <span className="live-dot" style={{ width: '7px', height: '7px' }}></span>
+        <span className="font-bold text-sm" style={{ color: 'var(--accent-green)' }}>LIVE</span>
+      </div>
+    );
+    if (isHalfTime) return (
+      <div className="px-4 py-1.5 rounded-full" style={{ background: 'rgba(255,171,0,0.15)', border: '1px solid rgba(255,171,0,0.3)' }}>
+        <span className="font-bold text-sm" style={{ color: 'var(--accent-amber)' }}>HALF TIME</span>
+      </div>
+    );
+    if (isFinished) return (
+      <div className="px-4 py-1.5 rounded-full" style={{ background: 'rgba(138,152,175,0.12)', border: '1px solid rgba(138,152,175,0.2)' }}>
+        <span className="font-bold text-sm" style={{ color: 'var(--text-secondary)' }}>FULL TIME</span>
+      </div>
+    );
+    return (
+      <div className="px-4 py-1.5 rounded-full" style={{ background: 'rgba(41,121,255,0.12)', border: '1px solid rgba(41,121,255,0.25)' }}>
+        <span className="font-bold text-sm" style={{ color: '#6ab0ff' }}>
+          {new Date(match.utcDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+        </span>
+      </div>
+    );
   };
 
-  const getScoreDisplay = () => {
-    if (match.score.fullTime.home !== null && match.score.fullTime.away !== null) {
-      return `${match.score.fullTime.home} - ${match.score.fullTime.away}`;
-    }
-    return "- : -";
+  const homeScore = match.score.fullTime.home;
+  const awayScore = match.score.fullTime.away;
+  const homeScoreNum = homeScore !== null ? Number(homeScore) : null;
+  const awayScoreNum = awayScore !== null ? Number(awayScore) : null;
+  const homeWon = homeScoreNum !== null && awayScoreNum !== null && homeScoreNum > awayScoreNum;
+  const awayWon = homeScoreNum !== null && awayScoreNum !== null && awayScoreNum > homeScoreNum;
+  const score = {
+    home: homeScore !== null ? homeScore : '-',
+    away: awayScore !== null ? awayScore : '-',
   };
 
-  const getHalfTimeScore = () => {
-    if (match.score.halfTime.home !== null && match.score.halfTime.away !== null) {
-      return `HT: ${match.score.halfTime.home} - ${match.score.halfTime.away}`;
-    }
-    return null;
-  };
+  const tabs = [
+    { key: 'overview', label: 'Overview' },
+    { key: 'officials', label: 'Officials' },
+  ] as const;
 
   return (
-    <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white xs:p-6 py-6 px-2">
-        <div className="flex flex-wrap items-center justify-between mb-4">
-          <div onClick={() => router.push(`/leagues/${match.competition.id}`)} className="flex flex-wrap items-center gap-4">
-            <img src={match.competition.emblem} alt={match.competition.name} className="w-12 h-12" />
-            <div>
-              <h1 className="text-2xl font-bold">{match.competition.name}</h1>
-              <p className="text-blue-100">Matchday {match.season.currentMatchday}</p>
+    <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+        {/* Back button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 mb-6 text-sm font-medium transition-colors"
+          style={{ color: 'var(--text-secondary)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+        >
+          <FaArrowLeft size={12} /> Back
+        </button>
+
+        {/* Match Hero Card */}
+        <div
+          className="rounded-2xl overflow-hidden mb-5"
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
+        >
+          {/* Competition banner */}
+          <div
+            className="flex items-center justify-between px-5 py-3 cursor-pointer"
+            style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)' }}
+            onClick={() => router.push(`/leagues/${match.competition.id}`)}
+          >
+            <div className="flex items-center gap-3">
+              {match.competition.emblem && (
+                <img
+                  src={match.competition.emblem}
+                  alt={match.competition.name}
+                  className="w-6 h-6 object-contain flex-shrink-0"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                />
+              )}
+              <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                {match.competition.name}
+              </span>
+              {match.matchday && (
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  · MD {match.matchday}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
+              <FaCalendar size={10} />
+              <span>{new Date(match.utcDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="flex items-center space-x-2 mb-2">
-              <FaCalendar className="w-4 h-4" />
-              <span className="text-sm">{formatDate(match.utcDate)}</span>
-            </div>
-            {match.venue && (
-              <div className="flex items-center space-x-2">
-                <FaMapPin className="w-4 h-4" />
-                <span className="text-sm">{match.venue}</span>
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Score Display */}
-        <div className="flex items-center justify-center space-x-8 py-6">
-          <Link href={`/teams/${match.homeTeam.id}`} className="text-center flex-1 truncate">
-            <img src={match.homeTeam.crest} alt={match.homeTeam.name} className="w-16 h-16 mx-auto mb-2" />
-            <h2 className="text-xl font-bold">{match.homeTeam.name}</h2>
-            <p className="text-blue-100 text-sm">{match.homeTeam.shortName}</p>
-          </Link>
-          
-          <div className="flex flex-col flex-1 text-center">
-            <div className="qy:text-5xl font-bold mb-2">
-              {getScoreDisplay()}
-            </div>
-            {getHalfTimeScore() && (
-              <div className="text-sm text-blue-100 mb-1">
-                {getHalfTimeScore()}
-              </div>
-            )}
-            {getStatusDisplay()}
-          </div>
-          
-          <Link href={`/teams/${match.awayTeam.id}`} className="text-center flex-1 truncate">
-            <img src={match.awayTeam.crest} alt={match.awayTeam.name} className="w-16 h-16 mx-auto mb-2" />
-            <h2 className="xs:text-xl font-bold">{match.awayTeam.name}</h2>
-            <p className="text-blue-100 text-sm">{match.awayTeam.shortName}</p>
-          </Link>
-        </div>
-
-        {/* Match Info */}
-        <div className="flex justify-center space-x-8 text-sm">
-          <div className="flex items-center space-x-1">
-            <FaClock className="w-4 h-4" />
-            <span>Updated: {new Date(match.lastUpdated).toLocaleTimeString()}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="flex space-x-8 px-6">
-          {['overview', 'officials'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as any)}
-              className={`py-4 px-2 border-b-2 font-medium text-sm capitalize ${
-                activeTab === tab
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {/* Tab Content */}
-      <div className="py-6 px-2">
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Match Information */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Match Information</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Competition:</span>
-                    <span className="font-medium text-end">{match.competition.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Stage:</span>
-                    <span className="font-medium text-end">{match.stage}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Matchday:</span>
-                    <span className="font-medium text-end">{match.matchday}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
-                    <span className="font-medium text-end">{match.status}</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Date:</span>
-                    <span className="font-medium text-end justify-end">{formatDate(match.utcDate)}</span>
-                  </div>
-                  {match.score.winner && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Winner:</span>
-                      <span className="font-medium text-end text-green-600">{match.score.winner}</span>
-                    </div>
+          {/* Score section */}
+          <div className="px-4 sm:px-8 py-8">
+            <div className="flex items-center justify-between gap-2 sm:gap-6">
+              {/* Home team */}
+              <Link href={`/teams/${match.homeTeam.id}`} className="flex flex-col items-center gap-3 flex-1 min-w-0 group">
+                <div
+                  className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}
+                >
+                  {match.homeTeam.crest && (
+                    <img
+                      src={match.homeTeam.crest}
+                      alt={match.homeTeam.name}
+                      className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
                   )}
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Duration:</span>
-                    <span className="font-medium text-end">{match.score.duration}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Last Updated:</span>
-                    <span className="font-medium text-end">{new Date(match.lastUpdated).toLocaleString()}</span>
-                  </div>
                 </div>
-              </div>
-            </div>
+                <div className="text-center w-full">
+                  <h2
+                    className="font-bold text-sm sm:text-base leading-tight group-hover:underline truncate"
+                    style={{ color: isFinished && !homeWon && homeScoreNum !== null ? 'var(--text-secondary)' : 'var(--text-primary)' }}
+                  >
+                    {match.homeTeam.shortName || match.homeTeam.name}
+                  </h2>
+                  <span className="text-xs hidden sm:block" style={{ color: 'var(--text-muted)' }}>{match.homeTeam.tla}</span>
+                </div>
+              </Link>
 
-            {/* Teams Information */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div onClick={() => router.push(`/teams/${match.homeTeam.id}`)} className="bg-blue-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4 text-blue-700">Home Team</h3>
-                <div className="flex items-center space-x-4 mb-4">
-                  <img src={match.homeTeam.crest} alt={match.homeTeam.name} className="w-12 h-12" />
-                  <div>
-                    <h4 className="font-bold text-lg">{match.homeTeam.name}</h4>
-                    <p className="text-gray-600">{match.homeTeam.shortName} ({match.homeTeam.tla})</p>
-                  </div>
+              {/* Score */}
+              <div className="flex flex-col items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <span
+                    className="score-display"
+                    style={{
+                      fontSize: 'clamp(32px, 5vw, 52px)',
+                      color: isLive ? 'var(--accent-green)' : 'var(--text-primary)',
+                      fontWeight: homeWon ? 800 : 700,
+                      opacity: isFinished && !homeWon && homeScoreNum !== null ? 0.45 : 1,
+                    }}
+                  >
+                    {score.home}
+                  </span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '20px', fontWeight: 300 }}>-</span>
+                  <span
+                    className="score-display"
+                    style={{
+                      fontSize: 'clamp(32px, 5vw, 52px)',
+                      color: isLive ? 'var(--accent-green)' : 'var(--text-primary)',
+                      fontWeight: awayWon ? 800 : 700,
+                      opacity: isFinished && !awayWon && awayScoreNum !== null ? 0.45 : 1,
+                    }}
+                  >
+                    {score.away}
+                  </span>
                 </div>
+
+                {match.score.halfTime.home !== null && (
+                  <span
+                    className="text-xs px-3 py-1 rounded-full"
+                    style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}
+                  >
+                    HT {match.score.halfTime.home} – {match.score.halfTime.away}
+                  </span>
+                )}
+
+                {getStatusChip()}
+
+                {match.venue && (
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <FaMapPin size={9} style={{ color: 'var(--text-muted)' }} />
+                    <span className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>{match.venue}</span>
+                  </div>
+                )}
               </div>
 
-              <div onClick={() => router.push(`/teams/${match.awayTeam.id}`)} className="bg-red-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4 text-red-700">Away Team</h3>
-                <div className="flex items-center space-x-4 mb-4">
-                  <img src={match.awayTeam.crest} alt={match.awayTeam.name} className="w-12 h-12" />
-                  <div>
-                    <h4 className="font-bold text-lg">{match.awayTeam.name}</h4>
-                    <p className="text-gray-600">{match.awayTeam.shortName} ({match.awayTeam.tla})</p>
-                  </div>
+              {/* Away team */}
+              <Link href={`/teams/${match.awayTeam.id}`} className="flex flex-col items-center gap-3 flex-1 min-w-0 group">
+                <div
+                  className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}
+                >
+                  {match.awayTeam.crest && (
+                    <img
+                      src={match.awayTeam.crest}
+                      alt={match.awayTeam.name}
+                      className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
+                  )}
                 </div>
-              </div>
-            </div>
-
-            {/* Season Information */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Season Information</h3>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {new Date(match.season.startDate).getFullYear()}
-                  </div>
-                  <div className="text-sm text-gray-500">Season Start</div>
+                <div className="text-center w-full">
+                  <h2
+                    className="font-bold text-sm sm:text-base leading-tight group-hover:underline truncate"
+                    style={{ color: isFinished && !awayWon && awayScoreNum !== null ? 'var(--text-secondary)' : 'var(--text-primary)' }}
+                  >
+                    {match.awayTeam.shortName || match.awayTeam.name}
+                  </h2>
+                  <span className="text-xs hidden sm:block" style={{ color: 'var(--text-muted)' }}>{match.awayTeam.tla}</span>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{match.season.currentMatchday}</div>
-                  <div className="text-sm text-gray-500">Current Matchday</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
-                    {match.season.winner || 'TBD'}
-                  </div>
-                  <div className="text-sm text-gray-500">Season Winner</div>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
-        )}
 
-        {activeTab === 'officials' && (
-          <div className="space-y-6">
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Match Officials</h3>
-              <div className="space-y-4">
-                {match.referees && match.referees.length > 0 ? (
-                  match.referees.map((referee, index) => (
-                    <div key={index} className="bg-white p-4 rounded-lg border">
-                      <div className="flex justify-between items-center">
+          {/* Last updated */}
+          <div
+            className="flex items-center justify-center gap-1.5 py-2"
+            style={{ borderTop: '1px solid var(--border-subtle)', background: 'rgba(0,0,0,0.1)' }}
+          >
+            <FaClock size={9} style={{ color: 'var(--text-muted)' }} />
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              Updated {new Date(match.lastUpdated).toLocaleTimeString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div
+          className="rounded-xl overflow-hidden"
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
+        >
+          <div
+            className="flex"
+            style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-secondary)' }}
+          >
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className="px-5 py-3 text-sm font-semibold capitalize transition-all"
+                style={{
+                  color: activeTab === tab.key ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  borderBottom: activeTab === tab.key ? '2px solid var(--accent-blue)' : '2px solid transparent',
+                  background: 'transparent',
+                  marginBottom: '-1px',
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="p-5">
+            {activeTab === 'overview' && (
+              <div className="space-y-5">
+                {/* Match Info Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { label: 'Competition', value: match.competition.name },
+                    { label: 'Stage', value: match.stage?.replace(/_/g, ' ') },
+                    { label: 'Matchday', value: match.matchday },
+                    { label: 'Status', value: match.status?.replace(/_/g, ' ') },
+                    { label: 'Date', value: formatDate(match.utcDate) },
+                    { label: 'Duration', value: match.score.duration },
+                    match.score.winner ? { label: 'Winner', value: match.score.winner.replace(/_/g, ' ') } : null,
+                  ].filter(Boolean).map((item: any) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between gap-4 py-2.5 px-3 rounded-lg"
+                      style={{ background: 'rgba(255,255,255,0.03)' }}
+                    >
+                      <span className="text-xs flex-shrink-0" style={{ color: 'var(--text-muted)' }}>{item.label}</span>
+                      <span className="text-sm font-medium text-right" style={{ color: 'var(--text-secondary)' }}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Teams */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { team: match.homeTeam, label: 'Home', accent: 'rgba(41,121,255,0.08)', color: '#6ab0ff', border: 'rgba(41,121,255,0.2)' },
+                    { team: match.awayTeam, label: 'Away', accent: 'rgba(255,23,68,0.07)', color: '#ff6b8a', border: 'rgba(255,23,68,0.2)' },
+                  ].map(({ team, label, accent, color, border }) => (
+                    <div
+                      key={team.id}
+                      className="rounded-xl p-4 cursor-pointer transition-all"
+                      style={{ background: accent, border: `1px solid ${border}` }}
+                      onClick={() => router.push(`/teams/${team.id}`)}
+                      onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.opacity = '0.8'}
+                      onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.opacity = '1'}
+                    >
+                      <span className="text-xs font-bold uppercase tracking-wider mb-3 block" style={{ color }}>{label} Team</span>
+                      <div className="flex items-center gap-3">
+                        {team.crest && (
+                          <img
+                            src={team.crest}
+                            alt={team.name}
+                            className="w-10 h-10 object-contain flex-shrink-0"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                          />
+                        )}
                         <div>
-                          <div className="font-medium text-lg">{referee.name}</div>
-                          <div className="text-sm text-gray-500">{referee.nationality}</div>
-                        </div>
-                        <div className="text-right">
-                          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                            {referee.type}
-                          </span>
+                          <div className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{team.name}</div>
+                          <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                            {team.shortName} ({team.tla})
+                          </div>
                         </div>
                       </div>
                     </div>
-                  ))
+                  ))}
+                </div>
+
+                {/* Season info */}
+                <div
+                  className="rounded-xl p-4"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}
+                >
+                  <h3
+                    className="text-xs font-bold uppercase tracking-wider mb-4"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    Season Info
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    {[
+                      { value: new Date(match.season.startDate).getFullYear(), label: 'Season Start', color: 'var(--accent-blue)' },
+                      { value: match.season.currentMatchday ?? '—', label: 'Matchday', color: 'var(--accent-green)' },
+                      { value: match.season.winner || 'TBD', label: 'Season Winner', color: 'var(--accent-amber)' },
+                    ].map((item) => (
+                      <div key={item.label}>
+                        <div
+                          className="text-xl font-bold mb-1"
+                          style={{ fontFamily: 'Rajdhani', color: item.color }}
+                        >
+                          {item.value}
+                        </div>
+                        <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'officials' && (
+              <div>
+                <h3
+                  className="text-xs font-bold uppercase tracking-wider mb-4"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  Match Officials
+                </h3>
+                {match.referees && match.referees.length > 0 ? (
+                  <div className="space-y-2">
+                    {match.referees.map((referee, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between px-4 py-3 rounded-lg"
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}
+                      >
+                        <div>
+                          <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{referee.name}</div>
+                          <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{referee.nationality}</div>
+                        </div>
+                        <span
+                          className="text-xs font-semibold px-3 py-1 rounded-full"
+                          style={{ background: 'rgba(41,121,255,0.12)', color: '#6ab0ff' }}
+                        >
+                          {referee.type}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="py-10 text-center" style={{ color: 'var(--text-muted)' }}>
                     No referee information available
                   </div>
                 )}
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

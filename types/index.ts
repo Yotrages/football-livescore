@@ -160,17 +160,42 @@ export interface SinglePlayer {
 }
 
 export interface NewsItem {
-  title: string,
-  content: string,
-  summary: string,
-  author: string,
-  category: string,
-  tags: string[],
-  imageUrl?: string,
-  featured: boolean,
-  status: 'draft' | 'published',
-  slug: string,
-  publishedAt?: string
+  _id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  author: string;
+  category: string;
+  tags: string[];
+  imageUrl?: string | null;
+  imagePublicId?: string | null;
+  featured: boolean;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
+  views: number;
+  readTime: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NewsPagination {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface NewsListResponse {
+  articles: NewsItem[];
+  pagination: NewsPagination;
+}
+
+export interface NewsSingleResponse {
+  article: NewsItem;
+  related: NewsItem[];
 }
 
 

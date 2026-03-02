@@ -1,4 +1,4 @@
-import { League, LeagueStanding, Match, MatchDetail, SingleCompetitionScorers, SinglePlayer, SingleTeam, SingleTeamMatches, StandingGroup } from "@/types";
+import { League, LeagueStanding, Match, MatchDetail, NewsItem, NewsListResponse, NewsSingleResponse, SingleCompetitionScorers, SinglePlayer, SingleTeam, SingleTeamMatches, StandingGroup } from "@/types";
 import axios from "axios";
 
 const api = axios.create({
@@ -167,6 +167,89 @@ const footballService = {
       console.error(`Error fetching match ${matchId}:`, error);
       return null;
     }
+  },
+
+  // ── News ──────────────────────────────────────────────────────────────────
+
+  getNewsList: async (params: {
+    page?: number;
+    limit?: number;
+    category?: string;
+    tag?: string;
+    featured?: boolean;
+    search?: string;
+  } = {}): Promise<NewsListResponse> => {
+    try {
+      const response = await api.get('/news', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching news list:', error);
+      return { articles: [], pagination: { total: 0, page: 1, limit: 12, pages: 0, hasNext: false, hasPrev: false } };
+    }
+  },
+
+  getLatestNews: async (limit = 6): Promise<NewsItem[]> => {
+    try {
+      const response = await api.get('/news/latest', { params: { limit } });
+      return response.data.articles || [];
+    } catch (error) {
+      console.error('Error fetching latest news:', error);
+      return [];
+    }
+  },
+
+  getFeaturedNews: async (limit = 5): Promise<NewsItem[]> => {
+    try {
+      const response = await api.get('/news/featured', { params: { limit } });
+      return response.data.articles || [];
+    } catch (error) {
+      console.error('Error fetching featured news:', error);
+      return [];
+    }
+  },
+
+  getNewsCategories: async (): Promise<{ category: string; count: number }[]> => {
+    try {
+      const response = await api.get('/news/categories');
+      return response.data.categories || [];
+    } catch (error) {
+      console.error('Error fetching news categories:', error);
+      return [];
+    }
+  },
+
+  getNewsBySlug: async (slug: string): Promise<NewsSingleResponse | null> => {
+    try {
+      const response = await api.get(`/news/${slug}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching article ${slug}:`, error);
+      return null;
+    }
+  },
+
+  createNews: async (formData: FormData): Promise<{ article: NewsItem; message: string }> => {
+    const response = await api.post('/news', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  updateNews: async (id: string, formData: FormData): Promise<{ article: NewsItem; message: string }> => {
+    const response = await api.put(`/news/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  deleteNews: async (id: string): Promise<{ message: string }> => {
+    const response = await api.delete(`/news/${id}`);
+    return response.data;
+  },
+
+  getAdminNews: async (params: { page?: number; limit?: number; status?: string; category?: string } = {}) => {
+    const response = await api.get('/news/admin', { params });
+    return response.data;
   },
 };
 
