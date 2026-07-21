@@ -47,7 +47,7 @@ const Page = () => {
             </button>
             <div>
               <h1 className="font-bold text-lg" style={{ fontFamily: 'Rajdhani, sans-serif', color: 'var(--text-primary)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                Today's Matches
+                Today&apos;s Matches
               </h1>
               <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
                 <FaCalendarAlt size={10} />
@@ -77,7 +77,7 @@ const Page = () => {
             <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 text-2xl" style={{ background: 'rgba(255,23,68,0.1)' }}>⚠️</div>
             <h3 className="font-bold text-base mb-2" style={{ color: 'var(--text-primary)' }}>Failed to Load Matches</h3>
             <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--text-secondary)' }}>
-              We couldn't load today's matches. Please check your connection and try again.
+              We couldn&apos;t load today&apos;s matches. Please check your connection and try again.
             </p>
             <button
               onClick={() => window.location.reload()}

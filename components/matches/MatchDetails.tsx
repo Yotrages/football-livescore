@@ -23,7 +23,6 @@ export const MatchDetails: React.FC<{ match: MatchDetail }> = ({ match }) => {
   const isLive = match.status === 'IN_PLAY' || match.status === 'LIVE';
   const isHalfTime = match.status === 'PAUSED';
   const isFinished = match.status === 'FINISHED';
-  const isScheduled = match.status === 'SCHEDULED' || match.status === 'TIMED';
 
   const getStatusChip = () => {
     if (isLive) return (

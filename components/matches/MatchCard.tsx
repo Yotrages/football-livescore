@@ -4,10 +4,8 @@ import { Match } from '@/types';
 import {
   formatMatchDate,
   formatMatchStatus,
-  getStatusClass,
   formatTeamName
 } from '@/utils/formatters';
-import Link from 'next/link';
 
 interface MatchCardProps {
   match: Match;

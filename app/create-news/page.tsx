@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import footballService from "@/services/apiService";
 import toast from "react-hot-toast";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { BubbleMenu } from "@tiptap/extension-bubble-menu";
-import { FloatingMenu } from "@tiptap/extension-floating-menu";
 import StarterKit from "@tiptap/starter-kit";
 import UnderlineExt from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
@@ -20,7 +18,6 @@ import {
   FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaListUl,
   FaListOl, FaQuoteLeft, FaAlignLeft, FaAlignCenter, FaAlignRight,
   FaAlignJustify, FaHighlighter, FaUndo, FaRedo, FaCode, FaMinus,
-  FaHeading, FaPlus,
 } from "react-icons/fa";
 import { MdSend, MdFormatClear, MdOutlineImage } from "react-icons/md";
 import NewsCard from "@/components/news/NewsCard";
@@ -86,8 +83,8 @@ interface FormState {
   imageUrl: string; featured: boolean;
 }
 
-import { BubbleMenuPlugin, BubbleMenuPluginProps } from "@tiptap/extension-bubble-menu";
-import { FloatingMenuPlugin, FloatingMenuPluginProps } from "@tiptap/extension-floating-menu";
+import { BubbleMenuPlugin } from "@tiptap/extension-bubble-menu";
+import { FloatingMenuPlugin } from "@tiptap/extension-floating-menu";
 
 // ── Custom BubbleMenu ─────────────────────────────────────────────
 const CustomBubbleMenu = ({ editor, children }: { editor: any; children: React.ReactNode }) => {

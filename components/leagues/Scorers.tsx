@@ -1,8 +1,7 @@
 "use client"
 import { useState } from 'react';
 import { SingleCompetitionScorers } from '@/types';
-import { FaSearch, FaFutbol, FaHandsHelping, FaBullseye, FaGamepad, FaFlag, FaBirthdayCake, FaSort } from 'react-icons/fa';
-import Link from 'next/link';
+import { FaSearch, FaFlag, FaSort } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export const CompetitionScorers: React.FC<{ data: SingleCompetitionScorers }> = ({ data }) => {

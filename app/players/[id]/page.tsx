@@ -1,6 +1,6 @@
 "use client"
 import { useSinglePlayer } from '@/hooks/useLiveData';
-import { calculateAge, formatDate, getPositionColor } from '@/utils/formatters';
+import { calculateAge, formatDate } from '@/utils/formatters';
 import { useParams, useRouter } from 'next/navigation';
 import { FaArrowLeft, FaCalendarAlt, FaGlobe, FaTrophy, FaUser } from 'react-icons/fa';
 

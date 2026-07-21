@@ -149,7 +149,7 @@ const Page = () => {
             <div className="flex items-center gap-3">
               <span className="section-label">Top Leagues</span>
             </div>
-            <a
+            <Link
               href="/leagues"
               className="text-xs font-medium transition-colors"
               style={{ color: 'var(--accent-blue)' }}
@@ -157,7 +157,7 @@ const Page = () => {
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--accent-blue)')}
             >
               View all →
-            </a>
+            </Link>
           </div>
 
           {featuredLeagues && featuredLeagues.length > 0 ? (
