@@ -79,13 +79,8 @@ export const formatScore = (homeScore: number | null, awayScore: number | null):
   return `${homeScore} : ${awayScore}`;
 };
 
-/**
- * Truncate text if too long
- * @param text - Text to truncate
- * @param maxLength - Maximum length
- * @returns Truncated text
- */
-export const truncateText = (text: string, maxLength: number = 20): string => {
+export const truncateText = (text?: string | null, maxLength: number = 20): string => {
+  if (!text) return '';
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
 };
@@ -95,11 +90,12 @@ export const truncateText = (text: string, maxLength: number = 20): string => {
  * @param team - Team object
  * @returns Formatted team name
  */
-export const formatTeamName = (team: { name: string; shortName?: string; tla?: string }): string => {
-  if (team.shortName && team.shortName.length < team.name.length) {
+export const formatTeamName = (team?: { name?: string; shortName?: string; tla?: string } | null): string => {
+  if (!team) return '';
+  if (team.shortName && team.name && team.shortName.length < team.name.length) {
     return team.shortName;
   }
-  return truncateText(team.name);
+  return truncateText(team.name || team.shortName || team.tla || '');
 };
 
 /**

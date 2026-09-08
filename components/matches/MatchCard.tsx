@@ -34,8 +34,8 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
     return <span className="status-finished">{formatMatchStatus(match.status, match.minute)}</span>;
   };
 
-  const homeScore = match.score.fullTime.home;
-  const awayScore = match.score.fullTime.away;
+  const homeScore = match.score?.fullTime?.home ?? null;
+  const awayScore = match.score?.fullTime?.away ?? null;
   const homeWon = homeScore !== null && awayScore !== null && homeScore > awayScore;
   const awayWon = homeScore !== null && awayScore !== null && awayScore > homeScore;
 
@@ -54,7 +54,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
             {match.competition.emblem && (
               <img
                 src={match.competition.emblem}
-                alt={match.competition.name}
+                alt={match.competition.name || 'Competition'}
                 className="w-4 h-4 object-contain flex-shrink-0"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
@@ -81,12 +81,17 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
           {/* Home team */}
           <div
             className="flex items-center gap-2 flex-1 min-w-0"
-            onClick={(e) => { e.stopPropagation(); router.push(`/teams/${match.homeTeam.id}`); }}
+            onClick={(e) => {
+              if (match.homeTeam?.id) {
+                e.stopPropagation();
+                router.push(`/teams/${match.homeTeam.id}`);
+              }
+            }}
           >
-            {match.homeTeam.crest && (
+            {match.homeTeam?.crest && (
               <img
                 src={match.homeTeam.crest}
-                alt={match.homeTeam.shortName}
+                alt={match.homeTeam.shortName || match.homeTeam.name || ''}
                 className="w-6 h-6 object-contain flex-shrink-0"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />
@@ -136,7 +141,12 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
           {/* Away team */}
           <div
             className="flex items-center gap-2 flex-1 min-w-0 justify-end"
-            onClick={(e) => { e.stopPropagation(); router.push(`/teams/${match.awayTeam.id}`); }}
+            onClick={(e) => {
+              if (match.awayTeam?.id) {
+                e.stopPropagation();
+                router.push(`/teams/${match.awayTeam.id}`);
+              }
+            }}
           >
             <span
               className="text-sm truncate text-right"
@@ -147,10 +157,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ match }) => {
             >
               {formatTeamName(match.awayTeam)}
             </span>
-            {match.awayTeam.crest && (
+            {match.awayTeam?.crest && (
               <img
                 src={match.awayTeam.crest}
-                alt={match.awayTeam.shortName}
+                alt={match.awayTeam.shortName || match.awayTeam.name || ''}
                 className="w-6 h-6 object-contain flex-shrink-0"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
               />

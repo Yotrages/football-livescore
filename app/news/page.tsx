@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNewsList, useFeaturedNews, useNewsCategories } from '@/hooks/useLiveData';
 import NewsCard from '@/components/news/NewsCard';
-import { FaArrowLeft, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaArrowLeft, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaPlus, FaNewspaper } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -37,8 +37,8 @@ const Page = () => {
     search: search || undefined,
   });
 
-  const { data: featured, isLoading: featuredLoading } = useFeaturedNews(3);
-  const { data: categories } = useNewsCategories();
+  const { data: featured = [], isLoading: featuredLoading } = useFeaturedNews(3);
+  const { data: categories = [] } = useNewsCategories();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,36 +79,41 @@ const Page = () => {
             </button>
             <div>
               <h1 className="font-bold text-xl" style={{ fontFamily: 'Rajdhani, sans-serif', color: 'var(--text-primary)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                Football News
+                Football News & Analysis
               </h1>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                Latest updates, transfers & match reports
+                Real-time breaking news, tactical breakdowns & transfer reports
               </p>
             </div>
           </div>
           <Link
             href="/create-news"
-            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
-            style={{ background: 'rgba(0,230,118,0.12)', color: 'var(--accent-green)', border: '1px solid rgba(0,230,118,0.25)' }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all hover:opacity-90"
+            style={{ background: 'var(--accent-blue)', color: '#fff' }}
           >
-            + Write Article
+            <FaPlus size={10} /> Write Article
           </Link>
         </div>
 
-        {/* Featured section */}
-        {!hasFilters && (
+        {/* Featured Banner (only on page 1 without filters) */}
+        {!hasFilters && page === 1 && (
           <section className="mb-8">
+            <div className="mb-3">
+              <span className="section-label">Top Stories</span>
+            </div>
             {featuredLoading ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div className="lg:col-span-2"><FeaturedSkeleton /></div>
-                <div className="hidden lg:grid gap-4">
+                <div className="lg:col-span-2">
+                  <FeaturedSkeleton />
+                </div>
+                <div className="grid gap-4">
                   <FeaturedSkeleton />
                   <FeaturedSkeleton />
                 </div>
               </div>
             ) : featured.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div className="lg:col-span-2" style={{ minHeight: '340px' }}>
+                <div className={featured.length > 1 ? 'lg:col-span-2' : 'lg:col-span-3'}>
                   <NewsCard article={featured[0]} variant="featured" />
                 </div>
                 {featured.length > 1 && (
@@ -135,7 +140,7 @@ const Page = () => {
               type="text"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
-              placeholder="Search articles, authors, tags..."
+              placeholder="Search articles, authors, clubs, players, tags..."
               className="search-input pr-24"
             />
             {searchInput && (
@@ -166,9 +171,9 @@ const Page = () => {
                   onClick={() => handleCategoryClick(category)}
                   className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
                   style={{
-                    background: activeCategory === category ? 'rgba(41,121,255,0.2)' : 'rgba(255,255,255,0.05)',
+                    background: activeCategory === category ? 'rgba(41,121,255,0.25)' : 'rgba(255,255,255,0.05)',
                     color: activeCategory === category ? '#6ab0ff' : 'var(--text-secondary)',
-                    border: activeCategory === category ? '1px solid rgba(41,121,255,0.35)' : '1px solid var(--border-subtle)',
+                    border: activeCategory === category ? '1px solid rgba(41,121,255,0.45)' : '1px solid var(--border-subtle)',
                   }}
                 >
                   {category} <span style={{ opacity: 0.65 }}>({count})</span>
@@ -182,7 +187,7 @@ const Page = () => {
         {hasFilters && (
           <div className="flex items-center gap-3 mb-4">
             <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              {pagination ? `${pagination.total} result${pagination.total !== 1 ? 's' : ''}` : 'Searching...'}
+              {pagination ? `${pagination.total} result` : 'Searching...'}
               {activeCategory && ` in "${activeCategory}"`}
               {search && ` for "${search}"`}
             </span>
@@ -199,7 +204,7 @@ const Page = () => {
         {/* Section header for article grid */}
         {!hasFilters && (
           <div className="flex items-center justify-between mb-4">
-            <span className="section-label">Latest Articles</span>
+            <span className="section-label">All Stories</span>
             {pagination && <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{pagination.total} articles</span>}
           </div>
         )}
@@ -229,7 +234,7 @@ const Page = () => {
             <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
               {hasFilters
                 ? 'Try adjusting your search or category filter.'
-                : 'Be the first to write a football article!'}
+                : 'Articles will appear here once seeded or published.'}
             </p>
             {hasFilters ? (
               <button onClick={clearFilters} className="px-5 py-2.5 rounded-lg text-sm font-semibold" style={{ background: 'var(--accent-blue)', color: '#fff' }}>
@@ -265,7 +270,7 @@ const Page = () => {
                 }, [])
                 .map((p, i) =>
                   p === '...' ? (
-                    <span key={`ellipsis-${i}`} className="px-2 text-sm" style={{ color: 'var(--text-muted)' }}>…</span>
+                    <span key={`ellipsis-${i}`} className="px-2 text-sm" style={{ color: 'var(--text-muted)' }}>...</span>
                   ) : (
                     <button
                       key={p}

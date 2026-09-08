@@ -15,7 +15,7 @@ const EmptyState = ({ icon, title, subtitle }: { icon: string; title: string; su
 );
 
 const LatestNewsSection = () => {
-  const { data: news, isLoading } = useLatestNews(6);
+  const { data: news = [], isLoading } = useLatestNews(6);
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
@@ -40,7 +40,7 @@ const LatestNewsSection = () => {
         </div>
       ) : news.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {news.slice(0, 6).map((article, i) => (
+          {news.slice(0, 6).map((article: any, i: number) => (
             <div key={article._id} className="animate-fade-in-up" style={{ animationDelay: `${i * 40}ms` }}>
               <NewsCard article={article} />
             </div>
@@ -162,7 +162,7 @@ const Page = () => {
 
           {featuredLeagues && featuredLeagues.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {featuredLeagues.slice(0, 8).map((league, i) => (
+              {featuredLeagues.slice(0, 8).map((league: any, i: number) => (
                 <div
                   key={league.id}
                   className="animate-fade-in-up"
@@ -221,7 +221,7 @@ const Page = () => {
               </button>
 
               <button
-                className={`tab-btn flex items-center gap-1.5 ${currentTab === 'live' ? 'active-live' : ''}`}
+                className={`tab-btn flex items-center gap-1.5 ${currentTab === 'live' ? 'active' : ''}`}
                 onClick={() => setCurrentTab('live')}
               >
                 {currentTab === 'live' && <span className="live-dot" style={{ width: '6px', height: '6px' }}></span>}
@@ -269,7 +269,7 @@ const Page = () => {
                 <MatchGridSkeleton />
               ) : activeMatches.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                  {activeMatches.map((match, i) => (
+                  {activeMatches.map((match: any, i: number) => (
                     <div
                       key={match.id}
                       className="animate-fade-in-up"
@@ -281,7 +281,7 @@ const Page = () => {
                 </div>
               ) : (
                 <EmptyState
-                  icon={currentTab === 'live' ? '⚽' : currentTab === 'upcoming' ? '📅' : '🏟️'}
+                  icon={currentTab === 'live' ? '⚽' : currentTab === 'upcoming' ? '📅' : '📋'}
                   title={tabData[currentTab].emptyTitle}
                   subtitle={tabData[currentTab].emptySubtitle}
                 />
