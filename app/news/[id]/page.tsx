@@ -5,7 +5,7 @@ import { useNewsBySlug } from '@/hooks/useLiveData';
 import NewsCard from '@/components/news/NewsCard';
 import {
   FaArrowLeft, FaClock, FaEye, FaTag,
-  FaFacebook, FaTwitter, FaLink, FaBolt, FaShareAlt
+  FaFacebook, FaTwitter, FaLink, FaBolt
 } from 'react-icons/fa';
 import Link from 'next/link';
 

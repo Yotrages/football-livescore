@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNewsList, useFeaturedNews, useNewsCategories } from '@/hooks/useLiveData';
 import NewsCard from '@/components/news/NewsCard';
-import { FaArrowLeft, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaPlus, FaNewspaper } from 'react-icons/fa';
+import { FaArrowLeft, FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
